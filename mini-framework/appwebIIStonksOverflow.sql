@@ -7,7 +7,7 @@ USE appWebIIStonksOverflow;
 
 CREATE TABLE Users(
    id INT AUTO_INCREMENT,
-   username VARCHAR(50) NOT NULL,
+   username VARCHAR(50) UNIQUE NOT NULL,
    passwd VARCHAR(50) NOT NULL,
    PRIMARY KEY(id),
    UNIQUE(username)
