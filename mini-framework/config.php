@@ -2,7 +2,7 @@
 
 return [
   'database' => [
-    'dbname' => 'appweb2stonksoverflow',
+    'dbname' => 'appwebiistonksoverflow',
     'username' => 'root',
     'password' => '', //'root' in MAMP //'' (empty) in easyPHP
     'connection' => 'mysql:host=127.0.0.1',

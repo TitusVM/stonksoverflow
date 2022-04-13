@@ -5,4 +5,5 @@ $router->define([
   '' => 'IndexController',
   'index' => 'IndexController',
   'about' => 'AboutController',
+  'mainscreen' => 'MainScreenController'
 ]);
