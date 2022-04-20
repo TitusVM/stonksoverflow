@@ -2,7 +2,7 @@
 
 return [
   'database' => [
-    'dbname' => 'appweb2stonksoverflow',
+    'dbname' => 'appWebIIStonksOverflow',
     'username' => 'root',
     'password' => '', //'root' in MAMP //'' (empty) in easyPHP
     'connection' => 'mysql:host=127.0.0.1',
@@ -15,5 +15,5 @@ return [
   ],
   // if your app is not in the server's /, decomment and adapt
   // (then you MUST use relative URLs everywhere)
-  'install_prefix' => 'edsa-appweb/mini-framework',
+  'install_prefix' => 'stonksoverflow/mini-framework',
 ];

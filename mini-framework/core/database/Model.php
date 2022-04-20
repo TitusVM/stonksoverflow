@@ -9,7 +9,7 @@ class Model
     public static function fetchAll($tableName, $orderBy, $fetchClass)
     {
         $dbh = App::get('dbh');
-        $req = "select * from " . $tableName; 
+        $req = "SELECT * FROM " . $tableName; 
         $req .= " ORDER BY " . $orderBy . " ASC";
         $statement = $dbh->prepare($req);
         $statement->execute();
@@ -38,34 +38,6 @@ class Model
         }
         $statement->execute();
         return $statement->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public static function login($tableName, $tabArgs)
-    {
-        $dbh = App::get('dbh'); 
-        // prepared statement with question mark placeholders (marqueurs de positionnement)
-        $req = "SELECT * FROM " . $tableName . " WHERE ";
-        for($counter = 0; $counter < sizeof($tabArgs); $counter++)
-        {
-            $req .= $tabArgs[$counter][0];
-            $req .= "= ?";
-            if($counter != sizeof($tabArgs)-1)
-            {
-                $req .= " AND ";
-            }
-        }
-
-        $statement = $dbh->prepare($req);
-        for($i = 1; $i <= sizeof($tabArgs); $i++)
-        {
-            $statement->bindParam($i, $tabArgs[$i-1][1], $tabArgs[$i-1][2]);
-        }
-
-        // use exec() because no results are returned
-        //$statement->debugDumpParams();
-        $statement->execute();
-        $fetch = $statement->fetch();
-        return !empty($fetch);
     }
 
     public static function update($tableName, $tabArgs)
