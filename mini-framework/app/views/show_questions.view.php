@@ -1,8 +1,9 @@
 <?php
+/*
   if(!isset($_SESSION['username'])) {
       header("Location: login");
       exit;
-  }
+  }*/
   
   $title = "Questions page";
   require('partials/header.php');
@@ -12,8 +13,6 @@
   
 <h1>Questions</h1>
    <?php
-    echo var_dump($questions);
-
       if (isset($question_added_failure) && ($question_added_failure != "")) {
     ?>
        <p class="error">
@@ -33,7 +32,7 @@
     }?>
     </div>
   </div>
-    <form action="add_Question">
+    <form action="add_question">
       <input type="submit" class="standard-field small" value="Add Question">
     </form>
 

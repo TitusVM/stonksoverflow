@@ -31,7 +31,7 @@ class Login extends Model
                 array('username', $this->username, PDO::PARAM_STR)
             );
             $user = Model::fetch("users", $tabArgs);
-            $_SESSION['userId'] = $user['id'];
+            $_SESSION['idUser'] = $user['id'];
             header("Location: index");
             exit;
         };

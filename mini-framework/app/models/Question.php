@@ -26,4 +26,15 @@ class Question extends Post
         . "</div>"; 
         return $htmlCode;
     }
+
+    public function addQuestion()
+    {
+        $tabName = "Questions";
+        $tabArgs = array(
+            array("mainText", $this->getMainText(), PDO::PARAM_STR),
+            array("datetimestamp", $this->getDatetimestamp(), PDO::PARAM_STR),
+            array("idUser", $this->getIdUser(), PDO::PARAM_INT)
+        );
+        $this->add($tabName, $tabArgs);
+    }
 }
