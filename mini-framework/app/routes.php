@@ -8,4 +8,5 @@ $router->define([
   'loginSubmit' => 'LoginController@parseInput',
   'show_questions' => 'QuestionController',
   'about' => 'AboutController',
+  'mainscreen' => 'MainScreenController'
 ]);
