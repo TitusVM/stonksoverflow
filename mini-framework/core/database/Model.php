@@ -16,6 +16,17 @@ class Model
         return $statement->fetchAll(PDO::FETCH_CLASS, $fetchClass);
     }
 
+    public static function fetchAllWhere($tableName, $tabArgs, $orderBy, $fetchClass)
+    {
+        $dbh = App::get('dbh');
+        $req = "SELECT * FROM " . $tableName . " WHERE " . $tabArgs[0][0] . "=?"; 
+        $req .= " ORDER BY " . $orderBy . " ASC";
+        $statement = $dbh->prepare($req);
+        $statement->bindParam(1, $tabArgs[0][1], $tabArgs[0][2]);
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_CLASS, $fetchClass);
+    }
+
     public static function fetch($tableName, $tabArgs)
     {
         $dbh = App::get('dbh'); 
