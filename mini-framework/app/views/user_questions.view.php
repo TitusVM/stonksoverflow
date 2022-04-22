@@ -3,7 +3,7 @@
     header("Location: login");
       exit;
   }
-  $title = "Add New Question";
+  $title = "My Questions";
   $username = $_SESSION['username'];
   require('partials/header.php');
 ?>

@@ -252,4 +252,28 @@ class QuestionController
             ]);*/
         }
     }
+
+    /**
+     * Delete question
+     */
+    public function delete()
+    {
+        $tabName = "Questions";
+        $tabArgs = array(
+            array('id', $_SERVER['QUERY_STRING'], PDO::PARAM_INT),
+        );
+        Model::delete($tabName, $tabArgs);
+        
+        $question_deleted_success = "Question deleted";
+        /**
+         * TODO fix redirect
+         * Redirect to questions page with questions array
+         */
+        $this->index();
+        /*return Helper::view("show_questions",[
+            'question_edited_success' => $question_edited_success,
+            'question_edited_failure' => $question_edited_failure,
+        ]);*/
+        
+    }
 }
