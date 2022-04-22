@@ -68,7 +68,6 @@ class Model
         }
         $req .= " WHERE " . $tabArgs[$counter][0] . "=?";
 
-
         $statement = $dbh->prepare($req);
         for($i = 1; $i <= sizeof($tabArgs); $i++)
         {

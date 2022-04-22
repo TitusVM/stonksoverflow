@@ -204,6 +204,7 @@ class QuestionController
                 'question_edited_success' => $question_edited_success,
                 'question_edited_failure' => $question_edited_failure,
             ]);
+            echo "Question empty";
         }
         /**
          * Check length of question is not too long
@@ -216,6 +217,7 @@ class QuestionController
                 'question_edited_success' => $question_edited_success,
                 'question_edited_failure' => $question_edited_failure,
             ]);
+            echo "Question too long";
         }
         else
         {
@@ -229,10 +231,10 @@ class QuestionController
             $question->setIdUser($_POST['idUser']);
 
             $tabArgs = array(
-                array('id', $question->getId(), PDO::PARAM_INT),
+                array('idUser', $question->getIdUser(), PDO::PARAM_INT),
                 array('mainText', $question->getMainText(), PDO::PARAM_STR),
                 array('datetimestamp', $question->getDatetimestamp(), PDO::PARAM_STR),
-                array('idUser', $question->getIdUser(), PDO::PARAM_INT),
+                array('id', $question->getId(), PDO::PARAM_INT),
             );
 
             Model::update("Questions", $tabArgs);
