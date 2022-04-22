@@ -19,7 +19,7 @@
     <div id="question-list">
     <?php 
     foreach ($questions as $question) {
-        echo $question->asHtml() . "<a href=\"edit?" . $question->getId() . "\">Edit</a>" . "<a href=\"delete?" . $question->getId() . "\">Delete</a>";
+        echo $question->asHtml() . "<a href=\"edit?" . htmlentities($question->getId()) . "\">Edit</a>" . "<a href=\"delete?" . htmlentities($question->getId()) . "\">Delete</a>";
     }?>
     </div>
   </div>

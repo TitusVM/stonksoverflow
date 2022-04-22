@@ -1,10 +1,4 @@
 <?php
-/*
-  if(!isset($_SESSION['username'])) {
-      header("Location: login");
-      exit;
-  }*/
-  
   $title = "Questions page";
   require('partials/header.php');
 ?>

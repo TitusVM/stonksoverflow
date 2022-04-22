@@ -13,6 +13,7 @@ $router->define([
   'parse_add_form' => 'QuestionController@parseInput',
   'user_questions' => 'QuestionController@userQuestions',
   'edit' => 'QuestionController@edit',
+  'parse_edit_form' => 'QuestionController@parseEditForm',
   'delete' => 'QuestionController@delete',
   'logout' => 'LoginController@logout',
   'about' => 'AboutController',

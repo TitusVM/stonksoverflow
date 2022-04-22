@@ -30,11 +30,14 @@ class Login extends Model
             $tabArgs = array(
                 array('username', $this->username, PDO::PARAM_STR)
             );
-            $user = Model::fetch("users", $tabArgs);
+            $user = Model::fetch("Users", $tabArgs);
             $_SESSION['idUser'] = $user['id'];
-            header("Location: index");
-            exit;
-        };
+            Helper::view("index");
+        }
+        else
+        {
+            throw new Exception("Invalid username or password");
+        }
     }
 
     public static function parseNewAccount()
@@ -73,8 +76,7 @@ class Login extends Model
                             $user = Model::fetch("Users", $tabArgs);
                             $_SESSION['username'] = $username;
                             $_SESSION['idUser'] =  $user['id'];
-                            header("Location: index");
-                            exit;
+                            Helper::view("index");
                         }
                         else
                         {
@@ -107,7 +109,7 @@ class Login extends Model
 
     public function validateLogin()
     {
-        $tableName = "users";
+        $tableName = "Users";
         $tabArgs = array(
             array("username", $this->username, PDO::PARAM_STR),
             array("passwd", $this->password, PDO::PARAM_STR)

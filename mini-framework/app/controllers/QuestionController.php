@@ -167,13 +167,89 @@ class QuestionController
         if(isset($_SESSION['username']))
         {
             $questionId = $_SERVER['QUERY_STRING'];
+            $idUser = $_SESSION['idUser'];
+            $tabArgs = array(
+                array('id', $questionId, PDO::PARAM_INT),
+                array('idUser', $idUser, PDO::PARAM_INT),
+            );
+            $fetch = Model::fetch("Questions", $tabArgs);
+            $question = new Question();
+            $question->setId($fetch['id']);
+            $question->setMainText($fetch['mainText']);
+            $question->setDatetimestamp($fetch['datetimestamp']);
+            $question->setIdUser($fetch['idUser']);
             Helper::view("edit_question",[
-                'questionId' => $questionId,
+                'question' => $question,
             ]);
         }
         else
         {
             Helper::view("login");
+        }
+    }
+
+    /**
+     * Function to parse edit form input
+     */
+    public function parseEditForm()
+    {   
+        /**
+         * Check if the question field has been filled out
+         */
+        if(!isset($_POST['mainText']) || $_POST['mainText'] == "")
+        {
+            $question_edited_failure = "Question cannot be empty";
+            $question_edited_success = "";
+            return Helper::view("show_questions",[
+                'question_edited_success' => $question_edited_success,
+                'question_edited_failure' => $question_edited_failure,
+            ]);
+        }
+        /**
+         * Check length of question is not too long
+         */
+        else if(strlen($_POST['mainText']) > 255)
+        {
+            $question_edited_failure = "Question is too long";
+            $question_edited_success = "";
+            return Helper::view("show_questions",[
+                'question_edited_success' => $question_edited_success,
+                'question_edited_failure' => $question_edited_failure,
+            ]);
+        }
+        else
+        {
+            /**
+             * Edit question in database
+             */
+            $question = new Question();
+            $question->setId($_POST['id']);
+            $question->setMainText($_POST['mainText']);
+            $question->setDatetimestamp($_POST['datetimestamp']);
+            $question->setIdUser($_POST['idUser']);
+
+            $tabArgs = array(
+                array('id', $question->getId(), PDO::PARAM_INT),
+                array('mainText', $question->getMainText(), PDO::PARAM_STR),
+                array('datetimestamp', $question->getDatetimestamp(), PDO::PARAM_STR),
+                array('idUser', $question->getIdUser(), PDO::PARAM_INT),
+            );
+
+            Model::update("Questions", $tabArgs);
+
+            /**
+             * Set success message and return to questions page
+             */
+            $question_edited_success = "Question edited";
+            /**
+             * TODO fix redirect
+             * Redirect to questions page with questions array
+             */
+            $this->index();
+            /*return Helper::view("show_questions",[
+                'question_edited_success' => $question_edited_success,
+                'question_edited_failure' => $question_edited_failure,
+            ]);*/
         }
     }
 }
