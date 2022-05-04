@@ -23,6 +23,8 @@ class LoginController
         if(isset($_POST['username']) && isset($_POST['password']))
         {
             $login = new Login();
+            $login->setUsername($_POST['username']);
+            $login->setPassword($_POST['password']);
             if($login->parseLogin())
             {
                 Helper::view("index");
