@@ -5,7 +5,23 @@ require 'app/models/Question.php';
 
 class QuestionController
 {
+    /***************************************************\
+    *                   Public methods                  *  
+    \***************************************************/
+
     public function index()
+    {
+        $questions = $this->fetchAllQuestions();
+        $failure = "";
+        $success = "";
+        return Helper::view("show_questions",[
+            'questions' => $questions,
+            'success' => $success,
+            'failure' => $failure,
+        ]);
+    }
+
+    public function fetchAllQuestions()
     {
         $tabArgs = array();
         $postArray = Model::fetchAll("Questions", "datetimestamp", "Post");
@@ -33,13 +49,7 @@ class QuestionController
                 $questions[] = $question;
             }
         }
-        $question_added_failure = "";
-        $question_added_success = "";
-        return Helper::view("show_questions",[
-            'questions' => $questions,
-            'question_added_success' => $question_added_success,
-            'question_added_failure' => $question_added_failure,
-        ]);
+        return $questions;
     }
 
     public function showAddView()
@@ -62,6 +72,12 @@ class QuestionController
     public function parseInput()
     {
         /**
+         * Initialize the error messages
+         */
+        $failure = "";
+        $success = "";
+
+        /**
          * Check if user is logged in (necessary to add a question)
          */
         if(!isset($_SESSION['username']))
@@ -75,11 +91,11 @@ class QuestionController
          */
         if(!isset($_POST['mainText']) || $_POST['mainText'] == "")
         {
-            $question_added_failure = "Question cannot be empty";
-            $question_added_success = "";
+            $failure = "Question cannot be empty";
+            $success = "";
             return Helper::view("show_questions",[
-                'question_added_success' => $question_added_success,
-                'question_added_failure' => $question_added_failure,
+                'success' => $success,
+                'failure' => $failure,
             ]);
         }
         /**
@@ -87,11 +103,11 @@ class QuestionController
          */
         else if(strlen($_POST['mainText']) > 255)
         {
-            $question_added_failure = "Question is too long";
-            $question_added_success = "";
+            $failure = "Question is too long";
+            $success = "";
             return Helper::view("show_questions",[
-                'question_added_success' => $question_added_success,
-                'question_added_failure' => $question_added_failure,
+                'success' => $success,
+                'failure' => $failure,
             ]);
         }
         else
@@ -108,16 +124,13 @@ class QuestionController
             /**
              * Set success message and return to questions page
              */
-            $question_added_success = "Question added";
-            /**
-             * TODO fix redirect
-             * Redirect to questions page with questions array
-             */
-            $this->index();
-            /*return Helper::view("show_questions",[
-                'question_added_success' => $question_added_success,
-                'question_added_failure' => $question_added_failure,
-            ]);*/
+            $success = "Added question successfully";
+            $questions = $this->fetchAllQuestions();
+            return Helper::view("show_questions",[
+                'success' => $success,
+                'failure' => $failure,
+                'questions' => $questions,
+            ]);
         }
     }
 
@@ -194,15 +207,21 @@ class QuestionController
     public function parseEditForm()
     {   
         /**
+         * Initialize the error messages
+         */
+        $failure = "";
+        $success = "";
+
+        /**
          * Check if the question field has been filled out
          */
         if(!isset($_POST['mainText']) || $_POST['mainText'] == "")
         {
-            $question_edited_failure = "Question cannot be empty";
-            $question_edited_success = "";
+            $failure = "Question cannot be empty";
+            $success = "";
             return Helper::view("show_questions",[
-                'question_edited_success' => $question_edited_success,
-                'question_edited_failure' => $question_edited_failure,
+                'success' => $success,
+                'failure' => $failure,
             ]);
             echo "Question empty";
         }
@@ -211,13 +230,12 @@ class QuestionController
          */
         else if(strlen($_POST['mainText']) > 255)
         {
-            $question_edited_failure = "Question is too long";
-            $question_edited_success = "";
+            $failure = "Question is too long";
+            $success = "";
             return Helper::view("show_questions",[
-                'question_edited_success' => $question_edited_success,
-                'question_edited_failure' => $question_edited_failure,
+                'success' => $success,
+                'failure' => $failure,
             ]);
-            echo "Question too long";
         }
         else
         {
@@ -242,16 +260,13 @@ class QuestionController
             /**
              * Set success message and return to questions page
              */
-            $question_edited_success = "Question edited";
-            /**
-             * TODO fix redirect
-             * Redirect to questions page with questions array
-             */
-            $this->index();
-            /*return Helper::view("show_questions",[
-                'question_edited_success' => $question_edited_success,
-                'question_edited_failure' => $question_edited_failure,
-            ]);*/
+            $success = "Question edited";
+            $failure = "";
+            $questions = $this->fetchAllQuestions();
+            return Helper::view("show_questions",[
+                'success' => $success,
+                'failure' => $failure,
+            ]);
         }
     }
 
@@ -260,22 +275,25 @@ class QuestionController
      */
     public function delete()
     {
+        /**
+         * Initialize the error messages
+         */
+        $failure = "";
+        $success = "";
+
         $tabName = "Questions";
         $tabArgs = array(
             array('id', $_SERVER['QUERY_STRING'], PDO::PARAM_INT),
         );
         Model::delete($tabName, $tabArgs);
-        
-        $question_deleted_success = "Question deleted";
-        /**
-         * TODO fix redirect
-         * Redirect to questions page with questions array
-         */
-        $this->index();
-        /*return Helper::view("show_questions",[
-            'question_edited_success' => $question_edited_success,
-            'question_edited_failure' => $question_edited_failure,
-        ]);*/
+        $success = "Question Deleted";
+        $failure = "";
+        $questions = $this->fetchAllQuestions();
+        return Helper::view("show_questions",[
+            'success' => $success,
+            'failure' => $failure,
+            'questions' => $questions,
+        ]);
         
     }
 }

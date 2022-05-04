@@ -7,10 +7,10 @@
   
 <h1>Questions</h1>
    <?php
-      if (isset($question_added_failure) && ($question_added_failure != "")) {
+      if ($failure != "") {
     ?>
        <p class="error">
-       Question could not be added: <?= htmlentities($question_added_failure); ?>
+       Question could not be added: <?= htmlentities($failure); ?>
        </p> 
     <?php } ?>
 

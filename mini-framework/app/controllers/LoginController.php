@@ -23,11 +23,18 @@ class LoginController
         if(isset($_POST['username']) && isset($_POST['password']))
         {
             $login = new Login();
-            $login->parseLogin();
+            if($login->parseLogin())
+            {
+                Helper::view("index");
+            }
+            else
+            {
+                Helper::view("login");
+            }
         }
         else
         {
-            echo "No username or password";
+            $_SESSION['Error'] = "Please enter username and password to login.";
             Helper::view("login");
         }
     }
@@ -41,7 +48,31 @@ class LoginController
     {
         if(isset($_POST['username']) && isset($_POST['password']) && isset($_POST['confirm_password']))
         {
-            Login::parseNewAccount();
+            if($_POST['password'] == $_POST['confirm_password'])
+            {
+                $login = new Login();
+                $login->setUsername($_POST['username']);
+                $login->setPassword($_POST['password']);
+                $tabArgs = array(
+                    array("username", htmlentities($login->getUsername()), PDO::PARAM_STR)
+                );
+                $user = Model::fetch("Users", $tabArgs);
+                if(!empty($user))
+                {
+                    $_SESSION['Error'] = "Username already exists.";
+                    Helper::view("new_account");
+                }
+                else
+                {
+                    $login->addAccount();
+                    Helper::view("index");   
+                }
+            }
+            else
+            {
+                $_SESSION['Error'] = "Passwords don't match.";
+                Helper::view("new_account");
+            }
         }
         else
         {
@@ -53,5 +84,6 @@ class LoginController
     public function logout()
     {
         Login::logout();
+        Helper::view("index");
     }
 }
