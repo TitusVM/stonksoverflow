@@ -25,16 +25,9 @@ class QuestionController
     {
         $tabArgs = array();
         $postArray = Model::fetchAll("Questions", "datetimestamp", "Post");
-        /**
-         * TODO make this better
-         */
         if(empty($postArray))
         {
-            $question = new Question();
-            $question->setMainText("No questions yet");
-            $question->setDatetimestamp(date("Y-m-d H:i:s"));
-            $question->setIdUser($_SESSION['idUser']);
-            $questions[] = $question;
+            $questions = [];
         }
         else
         {
@@ -141,18 +134,9 @@ class QuestionController
 
         );
         $postArray = Model::fetchAllWhere("Questions", $tabArgs,"datetimestamp", "Post");
-        
-        /**
-         * TODO make this better
-         */
-        // if postArray is empty add a placeholder question
         if(empty($postArray))
         {
-            $question = new Question();
-            $question->setMainText("No questions yet");
-            $question->setDatetimestamp(date("Y-m-d H:i:s"));
-            $question->setIdUser($_SESSION['idUser']);
-            $questions[] = $question;
+            $questions = [];
         }
         else
         {

@@ -21,8 +21,16 @@
     </div>
     <div id="question-list">
     <?php 
-      foreach ($questions as $question) {
+    if ($questions != null) 
+    {
+      foreach ($questions as $question) 
+      {
         echo $question->asHtml();
+      }
+    }
+    else
+    {
+      echo "<p>No questions yet.<\p>";
     }?>
     </div>
   </div>
