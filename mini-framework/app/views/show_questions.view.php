@@ -10,7 +10,7 @@
       if ($failure != "") {
     ?>
        <p class="error">
-       Question could not be added: <?= htmlentities($failure); ?>
+       Question could not be added: <?= $failure ?>
        </p> 
     <?php } ?>
 

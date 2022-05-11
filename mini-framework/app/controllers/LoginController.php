@@ -14,7 +14,17 @@ class LoginController
         }
         else
         {
-            Helper::view("login");
+            if(isset($_POST['username']))
+            {
+                $username = $_POST['username'];
+            }
+            else
+            {
+                $username = "";
+            }
+            Helper::view("new_account",[
+                'username' => $username,
+            ]);
         }
     }
 
@@ -43,7 +53,17 @@ class LoginController
 
     public function newAccount()
     {
-        Helper::view("new_account");
+        if(isset($_POST['username']))
+        {
+            $username = $_POST['username'];
+        }
+        else
+        {
+            $username = "";
+        }
+        Helper::view("new_account",[
+            'username' => $username,
+        ]);
     }
 
     public function addAccount()

@@ -10,7 +10,7 @@
 <h1>Login</h1>
     <div class="container center">
         <form action="loginSubmit" method="post">
-            <input type="text" class="standard-field" name="username" placeholder="Username" required value=<?= $username ?>>
+            <input type="text" class="standard-field" name="username" placeholder="Username" required value=<?= htmlentities($username) ?>>
             <input type="password" class="standard-field" name="password" placeholder="Password" required>
             <?php
                 if( isset($_SESSION['Error']) )

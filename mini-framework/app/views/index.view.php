@@ -21,7 +21,7 @@
         }
         else if (isset($_SESSION['username']))
         {
-            echo "<p>Vous êtes connecté en tant que " . $_SESSION['username'] . "</p>";
+            echo "<p>Vous êtes connecté en tant que " . htmlentities($_SESSION['username']) . "</p>";
         }
     ?>
 </div>
