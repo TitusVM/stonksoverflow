@@ -4,8 +4,6 @@
  * The Answer class allows users to answer Anwsers and stores them as Answers in the database. It is an extension of the Post class.
  */
 
-require 'app/models/Post.php';
-
 class Answer extends Post
 {
     /***************************************************\
@@ -13,26 +11,20 @@ class Answer extends Post
     \***************************************************/
 
     private $idQuestion;
+    private $commentList;
 
     /***************************************************\
     *                   Public methods                  *  
     \***************************************************/
 
-    public function getIdQuestion()
-	{
-		return $this->idQuestion;
-	}
-
-    public function setIdQuestion($value)
-	{
-		$this->idQuestion = $value;
-	}
-
     public function asHtml()
     {
         $htmlCode = "";
         $htmlCode .= 
-        "<div class=\"anwser\">" . $this->textAsDiv()
+        "<div class=\"answers\">" . $this->textAsDiv()
+        . "<div class=\"comments\">"
+        . $this->commentListAsHtml()
+        . "</div>"
         . "</div>"; 
         return $htmlCode;
     }
@@ -47,5 +39,38 @@ class Answer extends Post
             array("idUser", $this->getIdUser(), PDO::PARAM_INT)
         );
         $this->add($tabName, $tabArgs);
+    }
+    
+    public function commentListAsHtml()
+    {
+        $htmlCode = "";
+        if(!empty($this->commentList))
+        {
+            foreach ($this->commentList as $comment)
+            {
+                $htmlCode .= $comment->asHtml();
+            }
+        }
+        return $htmlCode;
+    }
+   
+    public function getIdQuestion()
+	{
+		return $this->idQuestion;
+	}
+
+    public function setIdQuestion($value)
+	{
+		$this->idQuestion = $value;
+	}
+
+    public function getCommentList()
+    {
+        return $this->commentList;
+    }
+
+    public function setCommentList($value)
+    {
+        $this->commentList = $value;
     }
 }
