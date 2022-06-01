@@ -73,8 +73,4 @@ class Answer extends Post
     {
         $this->commentList = $value;
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 0c2719d996c24f17047ceb02c6a111aa50dc7348
