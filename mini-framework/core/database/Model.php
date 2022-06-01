@@ -19,10 +19,22 @@ class Model
     public static function fetchAllWhere($tableName, $tabArgs, $orderBy, $fetchClass)
     {
         $dbh = App::get('dbh');
-        $req = "SELECT * FROM " . $tableName . " WHERE " . $tabArgs[0][0] . "=?"; 
+        $req = "SELECT * FROM " . $tableName . " WHERE ";
+        for($counter = 0; $counter < sizeof($tabArgs); $counter++)
+        {
+            $req .= $tabArgs[$counter][0];
+            $req .= "= ?";
+            if($counter != sizeof($tabArgs)-1)
+            {
+                $req .= " AND ";
+            }
+        }
         $req .= " ORDER BY " . $orderBy . " ASC";
         $statement = $dbh->prepare($req);
-        $statement->bindParam(1, $tabArgs[0][1], $tabArgs[0][2]);
+        for($i = 1; $i <= sizeof($tabArgs); $i++)
+        {
+            $statement->bindParam($i, $tabArgs[$i-1][1], $tabArgs[$i-1][2]);
+        }
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_CLASS, $fetchClass);
     }

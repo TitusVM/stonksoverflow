@@ -7,12 +7,12 @@ class QuestionController
 {
     public function index()
     {
-        $tabArgs = array();
-        $postArray = Model::fetchAll("Questions", "datetimestamp", "Post");
+        $questionArray = Model::fetchAll("Questions", "datetimestamp", "Post");
+        
         /**
          * TODO make this better
          */
-        if(empty($postArray))
+        if(empty($questionArray))
         {
             $question = new Question();
             $question->setMainText("No questions yet");
@@ -23,7 +23,7 @@ class QuestionController
         else
         {
             // Transform the array of objects into an array of questions
-            foreach($postArray as $post)
+            foreach($questionArray as $post)
             {
                 $question = new Question();
                 $question->setId($post->getId());
@@ -31,6 +31,66 @@ class QuestionController
                 $question->setDatetimestamp($post->getDatetimestamp());
                 $question->setIdUser($post->getIdUser());
                 $questions[] = $question;
+            }
+            foreach($questions as $question)
+            {
+                $answerArray = [];
+                $commentArray = [];
+                $tabArgs = array(
+                    array("idQuestion", $question->getId(), PDO::PARAM_INT)
+                );
+                $answerArray = Model::fetchAllWhere("Answers", $tabArgs, "datetimestamp", "Post");
+                $commentArray = Model::fetchAllWhere("Comments", $tabArgs, "datetimestamp", "Post");
+                
+
+                // Test if answerArray is empty
+                if(!empty($answerArray))
+                {
+                    $answersCommentArray = [];
+                    $answers = [];
+                    foreach($answerArray as $post)
+                    {
+                        $answer = new Answer();
+                        $answer->setId($post->getId());
+                        $answer->setMainText($post->getMainText());
+                        $answer->setDatetimestamp($post->getDatetimestamp());
+                        $answer->setIdUser($post->getIdUser());
+                        $tabArgs = array(
+                            array("idAnswer", $answer->getId(), PDO::PARAM_INT)
+                        );
+                        $answersCommentArray = Model::fetchAllWhere("Comments", $tabArgs, "datetimestamp", "Post");
+                        // Transform the array of objects into an array of Comments
+                        $answerComments = [];
+                        foreach($answersCommentArray as $post)
+                        {
+                            $comment = new Comment();
+                            $comment->setId($post->getId());
+                            $comment->setMainText($post->getMainText());
+                            $comment->setDatetimestamp($post->getDatetimestamp());
+                            $comment->setIdUser($post->getIdUser());
+                            $answerComments[] = $comment;
+                        }
+                        $answer->setCommentList($answerComments);
+                        $answers[] = $answer;
+                    }
+                    $question->setAnswerList($answers);
+                }
+                
+                // Test if commentArray is empty
+                if(!empty($commentArray))
+                {
+                    $questionComments = [];
+                    foreach($commentArray as $post)
+                    {
+                        $comment = new Comment();
+                        $comment->setId($post->getId());
+                        $comment->setMainText($post->getMainText());
+                        $comment->setDatetimestamp($post->getDatetimestamp());
+                        $comment->setIdUser($post->getIdUser());
+                        $questionComments[] = $comment;
+                    }
+                    $question->setCommentList($questionComments);
+                }
             }
         }
         $question_added_failure = "";
@@ -127,13 +187,13 @@ class QuestionController
             array('idUser', $_SESSION['idUser'], PDO::PARAM_INT),
 
         );
-        $postArray = Model::fetchAllWhere("Questions", $tabArgs,"datetimestamp", "Post");
+        $questionArray = Model::fetchAllWhere("Questions", $tabArgs,"datetimestamp", "Post");
         
         /**
          * TODO make this better
          */
-        // if postArray is empty add a placeholder question
-        if(empty($postArray))
+        // if questionArray is empty add a placeholder question
+        if(empty($questionArray))
         {
             $question = new Question();
             $question->setMainText("No questions yet");
@@ -144,7 +204,7 @@ class QuestionController
         else
         {
             // Transform the array of objects into an array of questions
-            foreach($postArray as $post)
+            foreach($questionArray as $post)
             {
                 $question = new Question();
                 $question->setId($post->getId());

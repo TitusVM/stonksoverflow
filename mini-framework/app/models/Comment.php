@@ -4,8 +4,6 @@
  * The Comment class allows users to comment Anwsers or Questions and stores them as Comments in the database. It is an extension of the Post class.
  */
 
-require 'app/models/Post.php';
-
 class Comment extends Post
 {
     /***************************************************\
