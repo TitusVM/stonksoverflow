@@ -20,6 +20,8 @@ class Post extends Model
     
     private $idUser;
 
+    private $title;
+
     //private $upvoteCount;
     
     //private $downvoteCount;
@@ -66,6 +68,16 @@ class Post extends Model
     public function setDatetimestamp($value)
 	{
 		$this->datetimestamp = $value;
+	}
+
+    public function getTitle()
+	{
+		return $this->title;
+	}
+
+    public function setTitle($value)
+	{
+		$this->title = $value;
 	}
     
     /***************************************************\

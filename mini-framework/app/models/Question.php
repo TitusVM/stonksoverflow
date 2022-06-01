@@ -24,7 +24,13 @@ class Question extends Post
     public function asHtml()
     {
         $htmlCode = "";
-        $htmlCode .= 
+        $htmlCode .=
+        "<div class=\"title\">
+            <h2> " .
+                 $this->getTitle() . "
+            </h2>
+        </div>" 
+        . 
         "<div class=\"question\">" . $this->getMainText()
         . "<div class=\"comments\">"
         . $this->commentListAsHtml()
@@ -33,6 +39,18 @@ class Question extends Post
         . $this->answerListAsHtml()
         . "</div>"
         . "</div>"; 
+        return $htmlCode;
+    }
+
+    public function asHtmlTitleOnly()
+    {
+        $htmlCode = "";
+        $htmlCode .=
+        "<div class=\"title\">
+            <h2>
+                <a onclick=\"showQuestionDiv(" . $this->getId() . ")\" style=\"user-select: none\">" . $this->getTitle() . "</a>
+            </h2>
+        </div>";
         return $htmlCode;
     }
 

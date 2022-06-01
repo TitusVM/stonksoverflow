@@ -27,6 +27,7 @@ class QuestionController
             {
                 $question = new Question();
                 $question->setId($post->getId());
+                $question->setTitle($post->getTitle());
                 $question->setMainText($post->getMainText());
                 $question->setDatetimestamp($post->getDatetimestamp());
                 $question->setIdUser($post->getIdUser());
@@ -34,64 +35,10 @@ class QuestionController
             }
             foreach($questions as $question)
             {
-                $answerArray = [];
-                $commentArray = [];
-                $tabArgs = array(
-                    array("idQuestion", $question->getId(), PDO::PARAM_INT)
-                );
-                $answerArray = Model::fetchAllWhere("Answers", $tabArgs, "datetimestamp", "Post");
-                $commentArray = Model::fetchAllWhere("Comments", $tabArgs, "datetimestamp", "Post");
-                
-
-                // Test if answerArray is empty
-                if(!empty($answerArray))
-                {
-                    $answersCommentArray = [];
-                    $answers = [];
-                    foreach($answerArray as $post)
-                    {
-                        $answer = new Answer();
-                        $answer->setId($post->getId());
-                        $answer->setMainText($post->getMainText());
-                        $answer->setDatetimestamp($post->getDatetimestamp());
-                        $answer->setIdUser($post->getIdUser());
-                        $tabArgs = array(
-                            array("idAnswer", $answer->getId(), PDO::PARAM_INT)
-                        );
-                        $answersCommentArray = Model::fetchAllWhere("Comments", $tabArgs, "datetimestamp", "Post");
-                        // Transform the array of objects into an array of Comments
-                        $answerComments = [];
-                        foreach($answersCommentArray as $post)
-                        {
-                            $comment = new Comment();
-                            $comment->setId($post->getId());
-                            $comment->setMainText($post->getMainText());
-                            $comment->setDatetimestamp($post->getDatetimestamp());
-                            $comment->setIdUser($post->getIdUser());
-                            $answerComments[] = $comment;
-                        }
-                        $answer->setCommentList($answerComments);
-                        $answers[] = $answer;
-                    }
-                    $question->setAnswerList($answers);
-                }
-                
-                // Test if commentArray is empty
-                if(!empty($commentArray))
-                {
-                    $questionComments = [];
-                    foreach($commentArray as $post)
-                    {
-                        $comment = new Comment();
-                        $comment->setId($post->getId());
-                        $comment->setMainText($post->getMainText());
-                        $comment->setDatetimestamp($post->getDatetimestamp());
-                        $comment->setIdUser($post->getIdUser());
-                        $questionComments[] = $comment;
-                    }
-                    $question->setCommentList($questionComments);
-                }
+                $question = $this->getAnswersComments($question);
+                $questionsWithPosts[] = $question;
             }
+            $questions = $questionsWithPosts;
         }
         $question_added_failure = "";
         $question_added_success = "";
@@ -337,5 +284,89 @@ class QuestionController
             'question_edited_failure' => $question_edited_failure,
         ]);*/
         
+    }
+
+    /**
+     * Show a single question from QUERY_STRING
+     */
+    public function showQuestion()
+    {
+        $questionId = $_SERVER['QUERY_STRING'];
+        $tabArgs = array(
+            array('id', $questionId, PDO::PARAM_INT),
+        );
+        $fetch = Model::fetch("Questions", $tabArgs);
+        $question = new Question();
+        $question->setId($fetch['id']);
+        $question->setTitle($fetch['title']);
+        $question->setMainText($fetch['mainText']);
+        $question->setDatetimestamp($fetch['datetimestamp']);
+        $question->setIdUser($fetch['idUser']);
+        $question = $this->getAnswersComments($question);
+        return Helper::view("show_question",[
+            'question' => $question,
+        ]);
+    }
+
+    public function getAnswersComments($question)
+    {
+        $answerArray = [];
+        $commentArray = [];
+        $tabArgs = array(
+            array("idQuestion", $question->getId(), PDO::PARAM_INT)
+        );
+        $answerArray = Model::fetchAllWhere("Answers", $tabArgs, "datetimestamp", "Post");
+        $commentArray = Model::fetchAllWhere("Comments", $tabArgs, "datetimestamp", "Post");
+        
+
+        // Test if answerArray is empty
+        if(!empty($answerArray))
+        {
+            $answersCommentArray = [];
+            $answers = [];
+            foreach($answerArray as $post)
+            {
+                $answer = new Answer();
+                $answer->setId($post->getId());
+                $answer->setMainText($post->getMainText());
+                $answer->setDatetimestamp($post->getDatetimestamp());
+                $answer->setIdUser($post->getIdUser());
+                $tabArgs = array(
+                    array("idAnswer", $answer->getId(), PDO::PARAM_INT)
+                );
+                $answersCommentArray = Model::fetchAllWhere("Comments", $tabArgs, "datetimestamp", "Post");
+                // Transform the array of objects into an array of Comments
+                $answerComments = [];
+                foreach($answersCommentArray as $post)
+                {
+                    $comment = new Comment();
+                    $comment->setId($post->getId());
+                    $comment->setMainText($post->getMainText());
+                    $comment->setDatetimestamp($post->getDatetimestamp());
+                    $comment->setIdUser($post->getIdUser());
+                    $answerComments[] = $comment;
+                }
+                $answer->setCommentList($answerComments);
+                $answers[] = $answer;
+            }
+            $question->setAnswerList($answers);
+        }
+        
+        // Test if commentArray is empty
+        if(!empty($commentArray))
+        {
+            $questionComments = [];
+            foreach($commentArray as $post)
+            {
+                $comment = new Comment();
+                $comment->setId($post->getId());
+                $comment->setMainText($post->getMainText());
+                $comment->setDatetimestamp($post->getDatetimestamp());
+                $comment->setIdUser($post->getIdUser());
+                $questionComments[] = $comment;
+            }
+            $question->setCommentList($questionComments);
+        }
+        return $question;
     }
 }

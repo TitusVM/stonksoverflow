@@ -15,6 +15,7 @@ CREATE TABLE Users(
 
 CREATE TABLE Questions(
    id INT AUTO_INCREMENT,
+   title varchar(150) NOT NULL,
    mainText TEXT,
    datetimestamp DATETIME NOT NULL,
    idUser INT NOT NULL,
@@ -56,9 +57,9 @@ INSERT INTO Users(username, passwd)
    VALUES ('test', 'test'),
           ('test2', 'test2');
 
-INSERT INTO Questions(mainText, datetimestamp, idUser)
-   VALUES ('Ceci est une question', now(), 1),
-          ('Ceci est une autre question', now(), 2);
+INSERT INTO Questions(title, mainText, datetimestamp, idUser)
+   VALUES ('Titre de question 1', 'Ceci est une question', now(), 1),
+          ('Titre de question 2', 'Ceci est une autre question', now(), 2);
 
 INSERT INTO Answers(mainText, datetimestamp, solution,  idQuestion, idUser)
    VALUES ('Ceci est une réponse qui répond à une question', now(), 1, 1, 1),

@@ -3,6 +3,18 @@
   require('partials/header.php');
 ?>
 
+<script>
+  function showQuestionDiv(id) {
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function() {
+      document.getElementById("questionDisplay").innerHTML =
+      this.responseText;
+    }
+    xhttp.open("GET", "question?" + id);
+    xhttp.send(); 
+  }
+</script>
+
 <main>
   
 <h1>Questions</h1>
@@ -22,7 +34,7 @@
     <div id="question-list">
     <?php 
       foreach ($questions as $question) {
-        echo $question->asHtml();
+        echo $question->asHtmlTitleOnly();
     }?>
     </div>
   </div>
@@ -30,6 +42,10 @@
       <input type="submit" class="standard-field small" value="Add Question">
     </form>
 
+  <!-- Create div on right side of screen -->
+  <div id="questionDisplay" style="border: 1px solid; height: fit-content">
+
+  </div>
 </main>
 <br>
 

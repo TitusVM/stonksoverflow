@@ -17,5 +17,5 @@ $router->define([
   'delete' => 'QuestionController@delete',
   'logout' => 'LoginController@logout',
   'about' => 'AboutController',
-  'mainscreen' => 'MainScreenController'
+  'question' => 'QuestionController@showQuestion'
 ]);
