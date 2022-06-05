@@ -9,6 +9,3 @@
 </head>
 
 <body>
-	<a href="about">A propos</a>
-	<a href="user_questions">My Questions</a>
-	<a href="logout">Logout</a>

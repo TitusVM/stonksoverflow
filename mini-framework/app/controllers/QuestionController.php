@@ -42,7 +42,7 @@ class QuestionController
         }
         $question_added_failure = "";
         $question_added_success = "";
-        return Helper::view("show_questions",[
+        return Helper::view("mainscreen",[
             'questions' => $questions,
             'question_added_success' => $question_added_success,
             'question_added_failure' => $question_added_failure,
@@ -84,7 +84,7 @@ class QuestionController
         {
             $question_added_failure = "Question cannot be empty";
             $question_added_success = "";
-            return Helper::view("show_questions",[
+            return Helper::view("mainscreen",[
                 'question_added_success' => $question_added_success,
                 'question_added_failure' => $question_added_failure,
             ]);
@@ -96,7 +96,7 @@ class QuestionController
         {
             $question_added_failure = "Question is too long";
             $question_added_success = "";
-            return Helper::view("show_questions",[
+            return Helper::view("mainscreen",[
                 'question_added_success' => $question_added_success,
                 'question_added_failure' => $question_added_failure,
             ]);
@@ -121,7 +121,7 @@ class QuestionController
              * Redirect to questions page with questions array
              */
             $this->index();
-            /*return Helper::view("show_questions",[
+            /*return Helper::view("mainscreen",[
                 'question_added_success' => $question_added_success,
                 'question_added_failure' => $question_added_failure,
             ]);*/
@@ -207,7 +207,7 @@ class QuestionController
         {
             $question_edited_failure = "Question cannot be empty";
             $question_edited_success = "";
-            return Helper::view("show_questions",[
+            return Helper::view("mainscreen",[
                 'question_edited_success' => $question_edited_success,
                 'question_edited_failure' => $question_edited_failure,
             ]);
@@ -220,7 +220,7 @@ class QuestionController
         {
             $question_edited_failure = "Question is too long";
             $question_edited_success = "";
-            return Helper::view("show_questions",[
+            return Helper::view("mainscreen",[
                 'question_edited_success' => $question_edited_success,
                 'question_edited_failure' => $question_edited_failure,
             ]);
@@ -255,7 +255,7 @@ class QuestionController
              * Redirect to questions page with questions array
              */
             $this->index();
-            /*return Helper::view("show_questions",[
+            /*return Helper::view("mainscreen",[
                 'question_edited_success' => $question_edited_success,
                 'question_edited_failure' => $question_edited_failure,
             ]);*/
@@ -279,7 +279,7 @@ class QuestionController
          * Redirect to questions page with questions array
          */
         $this->index();
-        /*return Helper::view("show_questions",[
+        /*return Helper::view("mainscreen",[
             'question_edited_success' => $question_edited_success,
             'question_edited_failure' => $question_edited_failure,
         ]);*/

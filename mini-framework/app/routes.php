@@ -2,9 +2,11 @@
 
 $router->define([
   // '' => 'controllers/index.php',  // by conventions all controllers are in 'controllers' folder
-  '' => 'IndexController',
-  'index' => 'IndexController',
+  '' => 'MainScreenController',
+  'index' => 'MainScreenController',
+  'mainscreen' => 'MainScreenController',
   'login' => 'LoginController',
+  'login_logout' => 'LoginController@loginLogout',
   'new_account' => 'LoginController@newAccount',
   'add_account' => 'LoginController@addAccount',
   'loginSubmit' => 'LoginController@parseInput',
@@ -16,6 +18,5 @@ $router->define([
   'parse_edit_form' => 'QuestionController@parseEditForm',
   'delete' => 'QuestionController@delete',
   'logout' => 'LoginController@logout',
-  'about' => 'AboutController',
   'question' => 'QuestionController@showQuestion'
 ]);

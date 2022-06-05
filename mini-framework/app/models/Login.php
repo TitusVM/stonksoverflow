@@ -32,7 +32,7 @@ class Login extends Model
             );
             $user = Model::fetch("Users", $tabArgs);
             $_SESSION['idUser'] = $user['id'];
-            Helper::view("index");
+            Helper::view("mainscreen");
         }
         else
         {
@@ -58,9 +58,9 @@ class Login extends Model
                 }
                 else if(isset($_POST['password']))
                 {
-                    if(isset($_POST['confirm_password']))
+                    if(isset($_POST['confirmPassword']))
                     {
-                        if($_POST['password'] == $_POST['confirm_password'])
+                        if($_POST['password'] == $_POST['confirmPassword'])
                         {
                             //$passwordNonHash = $_POST['password'];
                             //$password = hash("sha256", "titus" . $passwordNonHash . "miguel");
@@ -76,7 +76,7 @@ class Login extends Model
                             $user = Model::fetch("Users", $tabArgs);
                             $_SESSION['username'] = $username;
                             $_SESSION['idUser'] =  $user['id'];
-                            Helper::view("index");
+                            Helper::view("mainscreen");
                         }
                         else
                         {
@@ -87,16 +87,19 @@ class Login extends Model
                     else
                     {
                         $_SESSION['Error'] = "Password can't be empty";
+                        Helper::view("new_account");
                     }
                 }
                 else
                 {
                     $_SESSION['Error'] = "Password can't be empty";
+                    Helper::view("new_account");
                 }
             }
             else
             {
                 $_SESSION['Error'] = "Username can't be empty";
+                Helper::view("new_account");
             }
         }
     }
@@ -104,7 +107,7 @@ class Login extends Model
     public static function logout()
     {
         session_destroy();
-        Helper::view("index");
+        Helper::view("login");
     }
 
     public function validateLogin()

@@ -46,7 +46,7 @@ class Question extends Post
     {
         $htmlCode = "";
         $htmlCode .=
-        "<div class=\"title\">
+        "<div class=\"titleList\">
             <h2>
                 <a onclick=\"showQuestionDiv(" . $this->getId() . ")\" style=\"user-select: none\">" . $this->getTitle() . "</a>
             </h2>
