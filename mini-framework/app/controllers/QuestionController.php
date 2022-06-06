@@ -3,6 +3,10 @@ session_start();
 
 require 'app/models/Question.php';
 
+if (!class_exists('Answer')) {
+    require 'app/models/Answer.php';
+}
+
 class QuestionController
 {
     /***************************************************\
@@ -26,23 +30,39 @@ class QuestionController
         $tabArgs = array();
         $postArray = Model::fetchAll("Questions", "datetimestamp", "Post");
         if(empty($postArray))
+        $questionArray = Model::fetchAll("Questions", "datetimestamp", "Post");
+        
+        if(empty($questionArray))
         {
             $questions = [];
         }
         else
         {
             // Transform the array of objects into an array of questions
-            foreach($postArray as $post)
+            foreach($questionArray as $post)
             {
                 $question = new Question();
                 $question->setId($post->getId());
+                $question->setTitle($post->getTitle());
                 $question->setMainText($post->getMainText());
                 $question->setDatetimestamp($post->getDatetimestamp());
                 $question->setIdUser($post->getIdUser());
                 $questions[] = $question;
             }
+            foreach($questions as $question)
+            {
+                $question = $this->getAnswersComments($question);
+                $questionsWithPosts[] = $question;
+            }
+            $questions = $questionsWithPosts;
         }
-        return $questions;
+        $question_added_failure = "";
+        $question_added_success = "";
+        return Helper::view("mainscreen",[
+            'questions' => $questions,
+            'question_added_success' => $question_added_success,
+            'question_added_failure' => $question_added_failure,
+        ]);
     }
 
     public function showAddView()
@@ -78,17 +98,31 @@ class QuestionController
             header("Location: login");
             exit;
         }
+
+        /** 
+         * Check if the title and the main text are set
+         */
+        if(!isset($_POST['title']))
+        {
+            $question_added_failure = "Title is missing";
+            $question_added_success = "";
+            return Helper::view("mainscreen",[
+                'question_added_success' => $question_added_success,
+                'question_added_failure' => $question_added_failure,
+            ]);
+        }
+
         
         /**
          * Check if the question field has been filled out
          */
         if(!isset($_POST['mainText']) || $_POST['mainText'] == "")
         {
-            $failure = "Question cannot be empty";
-            $success = "";
-            return Helper::view("show_questions",[
-                'success' => $success,
-                'failure' => $failure,
+            $question_added_failure = "Question cannot be empty";
+            $question_added_success = "";
+            return Helper::view("mainscreen",[
+                'question_added_success' => $question_added_success,
+                'question_added_failure' => $question_added_failure,
             ]);
         }
         /**
@@ -96,11 +130,11 @@ class QuestionController
          */
         else if(strlen($_POST['mainText']) > 255)
         {
-            $failure = "Question is too long";
-            $success = "";
-            return Helper::view("show_questions",[
-                'success' => $success,
-                'failure' => $failure,
+            $question_added_failure = "Question is too long";
+            $question_added_success = "";
+            return Helper::view("mainscreen",[
+                'question_added_success' => $question_added_success,
+                'question_added_failure' => $question_added_failure,
             ]);
         }
         else
@@ -109,6 +143,7 @@ class QuestionController
              * Add question to database
              */
             $question = new Question();
+            $question->setTitle($_POST['title']);
             $question->setMainText($_POST['mainText']);
             $question->setDatetimestamp(date("Y-m-d H:i:s"));
             $question->setIdUser($_SESSION['idUser']);
@@ -117,13 +152,16 @@ class QuestionController
             /**
              * Set success message and return to questions page
              */
-            $success = "Added question successfully";
-            $questions = $this->fetchAllQuestions();
-            return Helper::view("show_questions",[
-                'success' => $success,
-                'failure' => $failure,
-                'questions' => $questions,
-            ]);
+            $question_added_success = "Question added";
+            /**
+             * TODO fix redirect
+             * Redirect to questions page with questions array
+             */
+            $this->index();
+            /*return Helper::view("mainscreen",[
+                'question_added_success' => $question_added_success,
+                'question_added_failure' => $question_added_failure,
+            ]);*/
         }
     }
 
@@ -133,15 +171,20 @@ class QuestionController
             array('idUser', $_SESSION['idUser'], PDO::PARAM_INT),
 
         );
-        $postArray = Model::fetchAllWhere("Questions", $tabArgs,"datetimestamp", "Post");
-        if(empty($postArray))
+        $questionArray = Model::fetchAllWhere("Questions", $tabArgs,"datetimestamp", "Post");
+        
+        /**
+         * TODO make this better
+         */
+        // if questionArray is empty add a placeholder question
+        if(empty($questionArray))
         {
             $questions = [];
         }
         else
         {
             // Transform the array of objects into an array of questions
-            foreach($postArray as $post)
+            foreach($questionArray as $post)
             {
                 $question = new Question();
                 $question->setId($post->getId());
@@ -201,24 +244,23 @@ class QuestionController
          */
         if(!isset($_POST['mainText']) || $_POST['mainText'] == "")
         {
-            $failure = "Question cannot be empty";
-            $success = "";
-            return Helper::view("show_questions",[
-                'success' => $success,
-                'failure' => $failure,
+            $question_edited_failure = "Question cannot be empty";
+            $question_edited_success = "";
+            return Helper::view("mainscreen",[
+                'question_edited_success' => $question_edited_success,
+                'question_edited_failure' => $question_edited_failure,
             ]);
-            echo "Question empty";
         }
         /**
          * Check length of question is not too long
          */
         else if(strlen($_POST['mainText']) > 255)
         {
-            $failure = "Question is too long";
-            $success = "";
-            return Helper::view("show_questions",[
-                'success' => $success,
-                'failure' => $failure,
+            $question_edited_failure = "Question is too long";
+            $question_edited_success = "";
+            return Helper::view("mainscreen",[
+                'question_edited_success' => $question_edited_success,
+                'question_edited_failure' => $question_edited_failure,
             ]);
         }
         else
@@ -244,13 +286,16 @@ class QuestionController
             /**
              * Set success message and return to questions page
              */
-            $success = "Question edited";
-            $failure = "";
-            $questions = $this->fetchAllQuestions();
-            return Helper::view("show_questions",[
-                'success' => $success,
-                'failure' => $failure,
-            ]);
+            $question_edited_success = "Question edited";
+            /**
+             * TODO fix redirect
+             * Redirect to questions page with questions array
+             */
+            $this->index();
+            /*return Helper::view("mainscreen",[
+                'question_edited_success' => $question_edited_success,
+                'question_edited_failure' => $question_edited_failure,
+            ]);*/
         }
     }
 
@@ -270,14 +315,162 @@ class QuestionController
             array('id', $_SERVER['QUERY_STRING'], PDO::PARAM_INT),
         );
         Model::delete($tabName, $tabArgs);
-        $success = "Question Deleted";
-        $failure = "";
-        $questions = $this->fetchAllQuestions();
-        return Helper::view("show_questions",[
-            'success' => $success,
-            'failure' => $failure,
-            'questions' => $questions,
-        ]);
         
+        $question_deleted_success = "Question deleted";
+        /**
+         * TODO fix redirect
+         * Redirect to questions page with questions array
+         */
+        $this->index();
+        /*return Helper::view("mainscreen",[
+            'question_edited_success' => $question_edited_success,
+            'question_edited_failure' => $question_edited_failure,
+        ]);*/
+    }
+
+    /**
+     * Show a single question from QUERY_STRING
+     */
+    public function showQuestion()
+    {
+        $questionId = $_SERVER['QUERY_STRING'];
+        $tabArgs = array(
+            array('id', $questionId, PDO::PARAM_INT),
+        );
+        $fetch = Model::fetch("Questions", $tabArgs);
+        $question = new Question();
+        $question->setId($fetch['id']);
+        $question->setTitle($fetch['title']);
+        $question->setMainText($fetch['mainText']);
+        $question->setDatetimestamp($fetch['datetimestamp']);
+        $question->setIdUser($fetch['idUser']);
+        $question = $this->getAnswersComments($question);
+        return Helper::view("show_question",[
+            'question' => $question,
+        ]);
+    }
+
+    public function getAnswersComments($question)
+    {
+        $answerArray = [];
+        $commentArray = [];
+        $tabArgs = array(
+            array("idQuestion", $question->getId(), PDO::PARAM_INT)
+        );
+        $answerArray = Model::fetchAllWhere("Answers", $tabArgs, "datetimestamp", "Post");
+        $commentArray = Model::fetchAllWhere("Comments", $tabArgs, "datetimestamp", "Post");
+        
+
+        // Test if answerArray is empty
+        if(!empty($answerArray))
+        {
+            $answersCommentArray = [];
+            $answers = [];
+            foreach($answerArray as $post)
+            {
+                $answer = new Answer();
+                $answer->setId($post->getId());
+                $answer->setIdQuestion($post->getIdQuestion());
+                $answer->setMainText($post->getMainText());
+                $answer->setDatetimestamp($post->getDatetimestamp());
+                $answer->setIdUser($post->getIdUser());
+                $tabArgs = array(
+                    array("idAnswer", $answer->getId(), PDO::PARAM_INT)
+                );
+                $answersCommentArray = Model::fetchAllWhere("Comments", $tabArgs, "datetimestamp", "Post");
+                // Transform the array of objects into an array of Comments
+                $answerComments = [];
+                foreach($answersCommentArray as $post)
+                {
+                    $comment = new Comment();
+                    $comment->setId($post->getId());
+                    $comment->setMainText($post->getMainText());
+                    $comment->setDatetimestamp($post->getDatetimestamp());
+                    $comment->setIdUser($post->getIdUser());
+                    $answerComments[] = $comment;
+                }
+                $answer->setCommentList($answerComments);
+                $answers[] = $answer;
+            }
+            $question->setAnswerList($answers);
+        }
+        
+        // Test if commentArray is empty
+        if(!empty($commentArray))
+        {
+            $questionComments = [];
+            foreach($commentArray as $post)
+            {
+                $comment = new Comment();
+                $comment->setId($post->getId());
+                $comment->setMainText($post->getMainText());
+                $comment->setDatetimestamp($post->getDatetimestamp());
+                $comment->setIdUser($post->getIdUser());
+                $questionComments[] = $comment;
+            }
+            $question->setCommentList($questionComments);
+        }
+        return $question;
+    }
+
+    /**
+     * Add a comment to a question
+     */
+    public function addComment()
+    {
+        if(isset($_SESSION['username']))
+        {
+
+            $comment = new Comment();
+            $comment->setIdQuestion($_POST['idQuestion']);
+            $comment->setMainText($_POST['mainText']);
+            $comment->setDatetimestamp(date("Y-m-d h:i:s"));
+            $comment->setIdUser($_POST['idUser']);
+
+            $tabArgs = array(
+                array('idQuestion', $comment->getIdQuestion(), PDO::PARAM_INT),
+                array('mainText', $comment->getMainText(), PDO::PARAM_STR),
+                array('datetimestamp', $comment->getDatetimestamp(), PDO::PARAM_STR),
+                array('idUser', $comment->getIdUser(), PDO::PARAM_INT),
+            );
+            
+            Model::add("Comments", $tabArgs);
+            Helper::view("mainscreen");
+        }
+        else
+        {
+            Helper::view("login");
+        }
+
+    }
+
+    /**
+     * Add an answer to a question
+     */
+    public function addAnswer()
+    {
+        if(isset($_SESSION['username']))
+        {
+
+            $answer = new Answer();
+            $answer->setIdQuestion($_POST['idQuestion']);
+            $answer->setMainText($_POST['mainText']);
+            $answer->setDatetimestamp(date("Y-m-d h:i:s"));
+            $answer->setIdUser($_POST['idUser']);
+    
+            $tabArgs = array(
+                array('idQuestion', $answer->getIdQuestion(), PDO::PARAM_INT),
+                array('mainText', $answer->getMainText(), PDO::PARAM_STR),
+                array('datetimestamp', $answer->getDatetimestamp(), PDO::PARAM_STR),
+                array('idUser', $answer->getIdUser(), PDO::PARAM_INT),
+            );
+    
+            Model::add("Answers", $tabArgs);
+            Helper::view("mainscreen");
+        }
+        else
+        {
+            Helper::view("login");
+        }
     }
 }

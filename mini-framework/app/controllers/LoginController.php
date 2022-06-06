@@ -9,7 +9,7 @@ class LoginController
     {
         if(isset($_SESSION['username']))
         {
-            header("Location: index");
+            header("Location: mainscreen");
             exit;
         }
         else
@@ -68,7 +68,7 @@ class LoginController
 
     public function addAccount()
     {
-        if(isset($_POST['username']) && isset($_POST['password']) && isset($_POST['confirm_password']))
+        if(isset($_POST['username']) && isset($_POST['password']) && isset($_POST['confirmPassword']))
         {
             if($_POST['password'] == $_POST['confirm_password'])
             {
@@ -107,5 +107,15 @@ class LoginController
     {
         Login::logout();
         Helper::view("index");
+    }
+
+    public function loginLogout()
+    {
+        if(isset($_SESSION['username'])){
+            Login::logout();
+        }
+        else {
+            Helper::view("login");
+        }
     }
 }

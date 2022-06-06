@@ -3,6 +3,18 @@
   require('partials/header.php');
 ?>
 
+<script>
+  function showQuestionDiv(id) {
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function() {
+      document.getElementById("questionDisplay").innerHTML =
+      this.responseText;
+    }
+    xhttp.open("GET", "question?" + id);
+    xhttp.send(); 
+  }
+</script>
+
 <main>
   
 <h1>Questions</h1>
@@ -31,13 +43,15 @@
     else
     {
       echo "<p>No questions yet.<\p>";
+      foreach ($questions as $question) {
+        echo $question->asHtmlTitleOnly();
     }?>
     </div>
   </div>
-    <form action="add_question">
-      <input type="submit" class="standard-field small" value="Add Question">
-    </form>
+  <!-- Create div on right side of screen -->
+  <div id="questionDisplay">
 
+  </div>
 </main>
 <br>
 

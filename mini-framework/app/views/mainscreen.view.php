@@ -1,55 +1,70 @@
-<!DOCTYPE html>
+<?php
+    if(session_status() == PHP_SESSION_NONE)
+    {
+        session_start();
+    }
 
-<html>
-<head>
-  	<link rel="stylesheet" type="text/css" href="css/stylesheet.css?<?php echo time(); ?>" />
-	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-	<title>MainScreen</title>
-</head>
+    if(!isset($questions))
+    {
+        header("Location: show_questions");
+    }
 
-<body>
-    <div>
-        <div id="questionList">
-            <input type="text" placeholder="Search">
-            <div id="questionLinks">
-                <a href="">Question</a>
-                <a href="">Another question</a>
-                <a href="">Another question</a>
-                <a href="">Another question</a>
-                <a href="">Another question</a>
-                <a href="">Another question</a>
-                <a href="">Another question</a>
-                <a href="">Another question</a>
-                <a href="">Another question</a>
-                <a href="">Another question</a>
-                <a href="">Another question</a>
-                <a href="">Another question</a>
-                <a href="">Another question</a>
-                <a href="">Another question</a>
-                <a href="">Another question</a>
-            </div>
-        </div> 
-        <div id="questionDisplay">
-            <p id="questionName">Question</p>
-            <div class="questionAnswer">
-                <p>Question</p>
-            </div>  
-            <button type="button" class="showComments">Show comments</button>
-            <p class="comments">Question comment</p>
+    if(isset($_SESSION['username']))
+    {
+        $username = $_SESSION['username'];
+    }
+    else
+    {
+        $username = "";
+    }
+    
+  $title = "Mainscreen";
+  require('partials/header.php');
+?>
 
-            <div class="questionAnswer">
-                <p>Answer</p>
-            </div>  
-            <button type="button" class="showComments">Show comments</button>
-            <p class="comments">Answer comment</p>
+<script>
 
-            <div class="questionAnswer">
-                <p>Another answer</p>
-            </div>  
-            <button type="button" class="showComments">Show comments</button>
-            <p class="comments">Another answer comment</p>
+function toggleAddCommentsAnswer(id)
+{
+    let answerField = "#addCommentAnswer" + id;
+    console.log(answerField);
+    $(answerField).toggle("visibility");
+}
+
+function toggleAddAnswers(id) {
+    let answerField = "#addAnswer" + id;
+    console.log(answerField);
+    $(answerField).toggle("visibility");
+  }
+
+  function toggleAddComments(id) {
+    let commentField = "#addComment" + id;
+    console.log(commentField);
+    $(commentField).toggle("visibility");
+  }
+
+  function showQuestionDiv(id) {
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function() {
+      document.getElementById("questionDisplay").innerHTML =
+      this.responseText;
+    }
+    xhttp.open("GET", "question?" + id);
+    xhttp.send(); 
+  }
+</script>
+
+    <div id="mainscreenBackground">
+      <div id="questionList">
+        <!--<input type="text" placeholder="Search" id="search">-->
+        <div id="questions">
+          <?php 
+            foreach ($questions as $question) {
+            echo $question->asHtmlTitleOnly();
+          }?>
         </div>
+      </div> 
+      <div id="questionDisplay">
+      </div>
     </div>
-</body>
-</html>
-
+<?php require('partials/footer.php'); ?>
