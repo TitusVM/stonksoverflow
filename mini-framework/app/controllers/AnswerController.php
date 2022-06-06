@@ -263,7 +263,7 @@ class AnswerController
             );
             
             Model::add("Comments", $tabArgs);
-            Helper::view("mainscreen");
+            Helper::view("index");
         }   
         else
         {

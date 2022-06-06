@@ -13,25 +13,25 @@
 		<ul>
 			<li>
 				<!-- picture as link element-->
-				<a href="show_questions" id="title">$tonksOverflow</a>
+				<a href="mainscreen" id="title">$tonksOverflow</a>
 			</li>
 			<li>
-		<a href="user_questions" class="tab" >My Posts</a>
+				<a href="user_questions" class="tab" >My Posts</a>
 			</li>
 			<li>
-		<a href="add_question" class="tab" >Ask a question</a>
+				<a href="add_question" class="tab" >Ask a question</a>
 			</li>
 			<li>
-			<form style="float: right;" action="login_logout" method="post">
-			<?php
-				if(isset($_SESSION['username'])) { ?>
-				<input type="submit" class="mainscreenLogin" value="Logout">
-				<?php }
-				else { ?>
-				<input type="submit" class="mainscreenLogin" value="Login">
-				<?php }
-			?>
-			</form>
+				<form style="float: right;" action="login_logout" method="post">
+				<?php
+					if(isset($_SESSION['username'])) { ?>
+					<input type="submit" class="mainscreenLogin" value="Logout">
+					<?php }
+					else { ?>
+					<input type="submit" class="mainscreenLogin" value="Login">
+					<?php }
+				?>
+				</form>
 			</li>
 		</ul>
 	</div>

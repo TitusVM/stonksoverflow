@@ -16,30 +16,22 @@ class QuestionController
     public function index()
     {
         $questions = $this->fetchAllQuestions();
-        $failure = "";
-        $success = "";
-        return Helper::view("show_questions",[
-            'questions' => $questions,
-            'success' => $success,
-            'failure' => $failure,
-        ]);
     }
 
     public function fetchAllQuestions()
     {
         $tabArgs = array();
         $postArray = Model::fetchAll("Questions", "datetimestamp", "Post");
-        if(empty($postArray))
-        $questionArray = Model::fetchAll("Questions", "datetimestamp", "Post");
+        $questions = [];
         
-        if(empty($questionArray))
+        if(empty($postArray))
         {
             $questions = [];
         }
         else
         {
             // Transform the array of objects into an array of questions
-            foreach($questionArray as $post)
+            foreach($postArray as $post)
             {
                 $question = new Question();
                 $question->setId($post->getId());
@@ -435,7 +427,7 @@ class QuestionController
             );
             
             Model::add("Comments", $tabArgs);
-            Helper::view("mainscreen");
+            $this->index();
         }
         else
         {
@@ -466,7 +458,7 @@ class QuestionController
             );
     
             Model::add("Answers", $tabArgs);
-            Helper::view("mainscreen");
+            $this->index();
         }
         else
         {

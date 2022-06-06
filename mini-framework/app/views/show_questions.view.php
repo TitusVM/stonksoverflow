@@ -43,8 +43,6 @@
     else
     {
       echo "<p>No questions yet.<\p>";
-      foreach ($questions as $question) {
-        echo $question->asHtmlTitleOnly();
     }?>
     </div>
   </div>

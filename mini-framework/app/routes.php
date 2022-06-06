@@ -2,15 +2,14 @@
 
 $router->define([
   // '' => 'controllers/index.php',  // by conventions all controllers are in 'controllers' folder
-  '' => 'MainScreenController',
-  'index' => 'MainScreenController',
-  'mainscreen' => 'MainScreenController',
+  '' => 'QuestionController',
+  'index' => 'QuestionController',
   'login' => 'LoginController',
   'login_logout' => 'LoginController@loginLogout',
   'new_account' => 'LoginController@newAccount',
   'add_account' => 'LoginController@addAccount',
   'loginSubmit' => 'LoginController@parseInput',
-  'show_questions' => 'QuestionController',
+  'mainscreen' => 'QuestionController',
   'add_question' => 'QuestionController@showAddView',
   'add_answer' => 'QuestionController@addAnswer',
   'add_comment' => 'QuestionController@addComment',

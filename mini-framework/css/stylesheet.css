@@ -1,5 +1,4 @@
 /* GENERAL ELEMENTS */
-
 body {
     font-family: sans-serif;
     background-color: lightgray;
@@ -113,7 +112,6 @@ div.questionTitle h2:hover {
 
 div#questionDisplay {
     width: 60%;
-    height: 100%;
     float: right;
     background-color: lightgrey;
 }

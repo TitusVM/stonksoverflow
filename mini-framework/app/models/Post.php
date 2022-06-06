@@ -111,7 +111,6 @@ class Post extends Model
         $htmlCode = "";
         $htmlCode .= 
         "<div class=\"post\">"
-            . "<p>" . htmlentities($this->mainText) . "</p>"
             . "<p>" . $this->mainText . "</p>"
             . "<div class=\"post-info\" style=\"display:block;\">" 
                 . "<p>" . $this->getUserName() . "</p>"

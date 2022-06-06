@@ -15,10 +15,6 @@
     <?php } ?>
 
   <div class="container" id="list-header">
-    <div class="grid-container center">
-      <div class="grid-item flex-container" id="legend">
-      </div>
-    </div>
     <div id="question-list">
     <?php 
         echo $question->asHtml();
