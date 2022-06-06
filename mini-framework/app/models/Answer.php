@@ -1,8 +1,21 @@
 <?php
 
 /**
+ * Test if Post class is defined and working
+ */
+
+if(!class_exists('Post')) {
+    require 'app/models/Post.php';
+}
+elseif (!class_exists('Comment')) {
+    require 'app/models/Comment.php';
+}
+
+
+/**
  * The Answer class allows users to answer Anwsers and stores them as Answers in the database. It is an extension of the Post class.
  */
+
 
 class Answer extends Post
 {
@@ -10,7 +23,6 @@ class Answer extends Post
     *                    Attributes                     *  
     \***************************************************/
 
-    private $idQuestion;
     private $commentList;
 
     /***************************************************\
@@ -21,9 +33,19 @@ class Answer extends Post
     {
         $htmlCode = "";
         $htmlCode .= 
-        "<div class=\"answers\">" . $this->textAsDiv()
+        "<div class=\"answer\">" . $this->textAsDiv()
         . "<div class=\"comments\">"
         . $this->commentListAsHtml()
+        . "<button onclick=\"toggleAddCommentsAnswer(" . $this->getId() . ")\">Comment</button>"
+        . "<div id=\"addCommentAnswer" . $this->getId() . "\" class=\"addCommentDiv\" style=\"display: none;\" >"
+            . "<form id=\"addCommentAnswerForm\" action=\"add_comment_answer\" method=\"post\">"
+                . "<input type=\"text\" name=\"idAnswer\" value=\"" . $this->getId() ."\" style=\"display:none;\"/>"
+                . "<input type=\"text\" name=\"idQuestion\" value=\"" . $this->getIdQuestion() ."\" style=\"display:none;\"/>"
+                . "<input type=\"text\" name=\"idUser\" value=\"" . $_SESSION['idUser'] ."\" style=\"display:none;\"/>"
+            . "</form>"
+            . "<textarea name=\"mainText\" form=\"addCommentAnswerForm\" id=\"commentField" . $this->getId() 
+                . "\" class=\"commentField\" placeholder=\"Add a comment...\" required></textarea>"
+            . "<input type=\"submit\" form=\"addCommentAnswerForm\" value=\"Submit\" />"
         . "</div>"
         . "</div>"; 
         return $htmlCode;

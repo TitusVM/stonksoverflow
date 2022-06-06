@@ -22,6 +22,8 @@ class Post extends Model
 
     private $title;
 
+    private $idQuestion;
+
     //private $upvoteCount;
     
     //private $downvoteCount;
@@ -79,6 +81,26 @@ class Post extends Model
 	{
 		$this->title = $value;
 	}
+
+    public function getIdQuestion()
+    {
+        return $this->idQuestion;
+    }
+
+    public function setIdQuestion($value)
+    {
+        $this->idQuestion = $value;
+    }
+
+    public function getUserName()
+    {
+        // Model fetch user name
+        $tabArgs = array(
+            array("id", $this->getIdUser(), PDO::PARAM_INT)
+        );
+        $username = Model::fetchAttrWhere("Users", $tabArgs, "username");
+        return $username['username'];
+    }
     
     /***************************************************\
     *                   Public methods                  * 
@@ -90,6 +112,10 @@ class Post extends Model
         $htmlCode .= 
         "<div class=\"post\">
             <p>" . $this->mainText . "</p>"
+            . "<div class=\"post-info\" style=\"display:block;\">" 
+                . "<p>" . $this->getUserName() . "</p>"
+                . "<p class=\"dateTimeStamp\">" . $this->datetimestamp . "</p>"
+            . "</div>"
         . "</div>";
         return $htmlCode;
     }

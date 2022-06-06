@@ -3,6 +3,10 @@ session_start();
 
 require 'app/models/Question.php';
 
+if (!class_exists('Answer')) {
+    require 'app/models/Answer.php';
+}
+
 class QuestionController
 {
     public function index()
@@ -76,6 +80,20 @@ class QuestionController
             header("Location: login");
             exit;
         }
+
+        /** 
+         * Check if the title and the main text are set
+         */
+        if(!isset($_POST['title']))
+        {
+            $question_added_failure = "Title is missing";
+            $question_added_success = "";
+            return Helper::view("mainscreen",[
+                'question_added_success' => $question_added_success,
+                'question_added_failure' => $question_added_failure,
+            ]);
+        }
+
         
         /**
          * Check if the question field has been filled out
@@ -107,6 +125,7 @@ class QuestionController
              * Add question to database
              */
             $question = new Question();
+            $question->setTitle($_POST['title']);
             $question->setMainText($_POST['mainText']);
             $question->setDatetimestamp(date("Y-m-d H:i:s"));
             $question->setIdUser($_SESSION['idUser']);
@@ -328,6 +347,7 @@ class QuestionController
             {
                 $answer = new Answer();
                 $answer->setId($post->getId());
+                $answer->setIdQuestion($post->getIdQuestion());
                 $answer->setMainText($post->getMainText());
                 $answer->setDatetimestamp($post->getDatetimestamp());
                 $answer->setIdUser($post->getIdUser());
@@ -368,5 +388,66 @@ class QuestionController
             $question->setCommentList($questionComments);
         }
         return $question;
+    }
+
+    /**
+     * Add a comment to a question
+     */
+    public function addComment()
+    {
+        if(isset($_SESSION['username']))
+        {
+
+            $comment = new Comment();
+            $comment->setIdQuestion($_POST['idQuestion']);
+            $comment->setMainText($_POST['mainText']);
+            $comment->setDatetimestamp(date("Y-m-d h:i:s"));
+            $comment->setIdUser($_POST['idUser']);
+
+            $tabArgs = array(
+                array('idQuestion', $comment->getIdQuestion(), PDO::PARAM_INT),
+                array('mainText', $comment->getMainText(), PDO::PARAM_STR),
+                array('datetimestamp', $comment->getDatetimestamp(), PDO::PARAM_STR),
+                array('idUser', $comment->getIdUser(), PDO::PARAM_INT),
+            );
+            
+            Model::add("Comments", $tabArgs);
+            Helper::view("mainscreen");
+        }
+        else
+        {
+            Helper::view("login");
+        }
+
+    }
+
+    /**
+     * Add an answer to a question
+     */
+    public function addAnswer()
+    {
+        if(isset($_SESSION['username']))
+        {
+
+            $answer = new Answer();
+            $answer->setIdQuestion($_POST['idQuestion']);
+            $answer->setMainText($_POST['mainText']);
+            $answer->setDatetimestamp(date("Y-m-d h:i:s"));
+            $answer->setIdUser($_POST['idUser']);
+    
+            $tabArgs = array(
+                array('idQuestion', $answer->getIdQuestion(), PDO::PARAM_INT),
+                array('mainText', $answer->getMainText(), PDO::PARAM_STR),
+                array('datetimestamp', $answer->getDatetimestamp(), PDO::PARAM_STR),
+                array('idUser', $answer->getIdUser(), PDO::PARAM_INT),
+            );
+    
+            Model::add("Answers", $tabArgs);
+            Helper::view("mainscreen");
+        }
+        else
+        {
+            Helper::view("login");
+        }
     }
 }

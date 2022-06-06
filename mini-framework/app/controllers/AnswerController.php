@@ -3,6 +3,10 @@ session_start();
 
 require 'app/models/Answer.php';
 
+if (!class_exists('Comment')) {
+    require 'app/models/Comment.php';
+}
+
 class AnswerController
 {
     public function index()
@@ -233,5 +237,37 @@ class AnswerController
             'anwser_edited_failure' => $anwser_edited_failure,
         ]);*/
         
+    }
+
+    /**
+     * Add a comment to an answer
+     */
+    public function addCommentAnswer()
+    {
+        if(isset($_SESSION['username']))
+        {
+            echo "here";
+            var_dump($_POST);
+            $comment = new Comment();
+            $comment->setIdAnswer($_POST['idAnswer']);
+            $comment->setIdQuestion($_POST['idQuestion']);
+            $comment->setMainText($_POST['mainText']);
+            $comment->setDatetimestamp(date("Y-m-d h:i:s"));
+            $comment->setIdUser($_POST['idUser']);
+
+            $tabArgs = array(
+                array('idQuestion', $comment->getIdQuestion(), PDO::PARAM_INT),
+                array('mainText', $comment->getMainText(), PDO::PARAM_STR),
+                array('datetimestamp', $comment->getDatetimestamp(), PDO::PARAM_STR),
+                array('idUser', $comment->getIdUser(), PDO::PARAM_INT),
+            );
+            
+            Model::add("Comments", $tabArgs);
+            Helper::view("mainscreen");
+        }   
+        else
+        {
+            Helper::view("login");
+        }
     }
 }

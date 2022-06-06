@@ -1,8 +1,17 @@
 <?php
 
 /**
+ * Test if Post class is defined and working
+ */
+if(!class_exists('Post')) {
+    require 'app/models/Post.php';
+}
+
+
+/**
  * The Comment class allows users to comment Anwsers or Questions and stores them as Comments in the database. It is an extension of the Post class.
  */
+
 
 class Comment extends Post
 {

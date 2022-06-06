@@ -63,6 +63,31 @@ class Model
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
+    public static function fetchAttrWhere($tableName, $tabArgs, $attribute)
+    {
+        $dbh = App::get('dbh'); 
+        // prepared statement with question mark placeholders (marqueurs de positionnement)
+        $req = "SELECT " . $attribute . " FROM " . $tableName . " WHERE ";
+        for($counter = 0; $counter < sizeof($tabArgs); $counter++)
+        {
+            $req .= $tabArgs[$counter][0];
+            $req .= "= ?";
+            if($counter != sizeof($tabArgs)-1)
+            {
+                $req .= " AND ";
+            }
+        }
+
+        $statement = $dbh->prepare($req);
+        for($i = 1; $i <= sizeof($tabArgs); $i++)
+        {
+            $statement->bindParam($i, $tabArgs[$i-1][1], $tabArgs[$i-1][2]);
+        }
+        $statement->execute();
+        return $statement->fetch(PDO::FETCH_ASSOC);
+
+    }
+
     public static function update($tableName, $tabArgs)
     {
         // $argv are variable names and values to add to $tableName

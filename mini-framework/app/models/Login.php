@@ -36,7 +36,8 @@ class Login extends Model
         }
         else
         {
-            throw new Exception("Invalid username or password");
+            $_SESSION['Error'] = "Password or username is incorrect";
+            Helper::view("login");
         }
     }
 

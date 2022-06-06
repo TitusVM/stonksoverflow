@@ -27,7 +27,7 @@ CREATE TABLE Answers(
    id INT AUTO_INCREMENT,
    mainText TEXT,
    datetimestamp DATETIME NOT NULL,
-   solution TINYINT NOT NULL,
+   solution TINYINT NOT NULL DEFAULT FALSE,
    idQuestion INT NOT NULL,
    idUser INT NOT NULL,
    PRIMARY KEY(id),
