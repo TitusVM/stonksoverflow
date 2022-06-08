@@ -22,7 +22,7 @@ class LoginController
             {
                 $username = "";
             }
-            Helper::view("new_account",[
+            Helper::view("login",[
                 'username' => $username,
             ]);
         }
@@ -70,7 +70,7 @@ class LoginController
     {
         if(isset($_POST['username']) && isset($_POST['password']) && isset($_POST['confirmPassword']))
         {
-            if($_POST['password'] == $_POST['confirm_password'])
+            if($_POST['password'] == $_POST['confirmPassword'])
             {
                 $login = new Login();
                 $login->setUsername($_POST['username']);
@@ -82,24 +82,20 @@ class LoginController
                 if(!empty($user))
                 {
                     $_SESSION['Error'] = "Username already exists.";
-                    Helper::view("new_account");
                 }
                 else
                 {
-                    $login->addAccount();
-                    Helper::view("index");   
+                    $login->addAccount(); 
                 }
             }
             else
             {
                 $_SESSION['Error'] = "Passwords don't match.";
-                Helper::view("new_account");
             }
         }
         else
         {
             $_SESSION['Error'] = "Password can't be empty";
-            Helper::view("new_account");
         }
     }
 

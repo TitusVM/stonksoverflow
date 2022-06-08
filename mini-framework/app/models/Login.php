@@ -65,12 +65,11 @@ class Login extends Model
             );
             $user = Model::fetch("Users", $tabArgs);
             $_SESSION['idUser'] = $user['id'];
-            Helper::view("mainscreen");
+            header("Location: index");
         }
         else
         {
             $_SESSION['Error'] = "Password or username is incorrect";
-            Helper::view("login");
         }
     }
 
@@ -96,8 +95,6 @@ class Login extends Model
                     {
                         if($_POST['password'] == $_POST['confirmPassword'])
                         {
-                            //$passwordNonHash = $_POST['password'];
-                            //$password = hash("sha256", "titus" . $passwordNonHash . "miguel");
                             $password = $_POST['password'];
                             $tabArgs = array (
                                 array("username", $username, PDO::PARAM_STR),
@@ -110,30 +107,26 @@ class Login extends Model
                             $user = Model::fetch("Users", $tabArgs);
                             $_SESSION['username'] = $username;
                             $_SESSION['idUser'] =  $user['id'];
-                            Helper::view("mainscreen");
+                            header("Location: index");
                         }
                         else
                         {
                             $_SESSION['Error'] = "Passwords aren't the same";
-                            Helper::view("new_account");
                         }
                     }
                     else
                     {
                         $_SESSION['Error'] = "Password can't be empty";
-                        Helper::view("new_account");
                     }
                 }
                 else
                 {
                     $_SESSION['Error'] = "Password can't be empty";
-                    Helper::view("new_account");
                 }
             }
             else
             {
                 $_SESSION['Error'] = "Username can't be empty";
-                Helper::view("new_account");
             }
         }
     }
