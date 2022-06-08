@@ -157,40 +157,6 @@ class QuestionController
         }
     }
 
-    public function userQuestions()
-    {
-        $tabArgs = array(
-            array('idUser', $_SESSION['idUser'], PDO::PARAM_INT),
-
-        );
-        $questionArray = Model::fetchAllWhere("Questions", $tabArgs,"datetimestamp", "Post");
-        
-        /**
-         * TODO make this better
-         */
-        // if questionArray is empty add a placeholder question
-        if(empty($questionArray))
-        {
-            $questions = [];
-        }
-        else
-        {
-            // Transform the array of objects into an array of questions
-            foreach($questionArray as $post)
-            {
-                $question = new Question();
-                $question->setId($post->getId());
-                $question->setMainText($post->getMainText());
-                $question->setDatetimestamp($post->getDatetimestamp());
-                $question->setIdUser($post->getIdUser());
-                $questions[] = $question;
-            }
-        }
-        return Helper::view("user_questions",[
-            'questions' => $questions,
-        ]);
-    }
-
     public function edit()
     {
         /**
@@ -464,5 +430,84 @@ class QuestionController
         {
             Helper::view("login");
         }
+    }
+
+    
+
+    public function userPosts()
+    {
+        $tabArgs = array(
+            array('idUser', $_SESSION['idUser'], PDO::PARAM_INT),
+
+        );
+        $questionArray = Model::fetchAllWhere("Questions", $tabArgs,"datetimestamp", "Post");
+        $answerArray = Model::fetchAllWhere("Answers", $tabArgs,"datetimestamp", "Post");
+        $commentArray = Model::fetchAllWhere("Comments", $tabArgs,"datetimestamp", "Post");
+
+        if(empty($questionArray))
+        {
+            $questions = [];
+        }
+        else
+        {
+            // Transform the array of objects into an array of questions
+            foreach($questionArray as $post)
+            {
+                $question = new Question();
+                $question->setId($post->getId());
+                $question->setMainText($post->getMainText());
+                $question->setDatetimestamp($post->getDatetimestamp());
+                $question->setIdUser($post->getIdUser());
+                $questions[] = $question;
+            }
+        }
+        /**
+         * Answers
+         */
+        if(empty($answerArray))
+        {
+            $answers = [];
+        }
+        else
+        {
+            // Transform the array of objects into an array of answers
+            foreach($answerArray as $post)
+            {
+                $answer = new Answer();
+                $answer->setId($post->getId());
+                $answer->setMainText($post->getMainText());
+                $answer->setDatetimestamp($post->getDatetimestamp());
+                $answer->setIdUser($post->getIdUser());
+                $answer->setIdQuestion($post->getIdQuestion());
+                $answers[] = $answer;
+            }
+        }
+        /**
+         * Comments
+         */
+        if(empty($commentArray))
+        {
+            $comments = [];
+        }
+        else
+        {
+            // Transform the array of objects into an array of comments
+            foreach($commentArray as $post)
+            {
+                $comment = new Comment();
+                $comment->setId($post->getId());
+                $comment->setMainText($post->getMainText());
+                $comment->setDatetimestamp($post->getDatetimestamp());
+                $comment->setIdUser($post->getIdUser());
+                $comment->setIdQuestion($post->getIdQuestion());
+                $comments[] = $comment;
+            }
+        }
+
+        return Helper::view("user_questions",[
+            'questions' => $questions,
+            'answers' => $answers,
+            'comments' => $comments
+        ]);
     }
 }

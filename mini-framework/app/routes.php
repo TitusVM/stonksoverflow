@@ -15,7 +15,7 @@ $router->define([
   'add_comment' => 'QuestionController@addComment',
   'add_comment_answer' => 'AnswerController@addCommentAnswer',
   'parse_add_form' => 'QuestionController@parseInput',
-  'user_questions' => 'QuestionController@userQuestions',
+  'user_questions' => 'QuestionController@userPosts',
   'edit' => 'QuestionController@edit',
   'parse_edit_form' => 'QuestionController@parseEditForm',
   'delete' => 'QuestionController@delete',

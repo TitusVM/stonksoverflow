@@ -11,7 +11,6 @@
 <main>
 
 
-<div class="container" id="list-header">
     <div class="grid-container center">
       <div class="grid-item flex-container" id="legend">
       </div>
@@ -22,7 +21,7 @@
     {
       foreach ($questions as $question) 
       {
-        echo $question->asHtml() . "<a href=\"edit?" . htmlentities($question->getId()) . "\">Edit</a>" . "<a href=\"delete?" . htmlentities($question->getId()) . "\">Delete</a>";
+        echo $question->asHtml() . "<a href=\"edit?" . htmlentities($question->getId()) . "\">Edit</a>";
       }
     }
     else
@@ -31,8 +30,38 @@
     }?>
     </div>
     </div>
-  </div>
 
+  <h1>User <?php echo $username?>'s Answers</h1>
+  <div id="answer-list">
+    <?php 
+    if ($answers != null) 
+    {
+      foreach ($answers as $answer) 
+      {
+        echo $answer->asHtml() . "<a href=\"edit?" . htmlentities($answer->getId()) . "\">Edit</a>";
+      }
+    }
+    else
+    {
+      echo "<p>No Answers yet.</p>";
+    }?>
+    </div>
+
+  <h1>User <?php echo $username?>'s Comments</h1>
+  <div id="comment-list">
+    <?php 
+    if ($comments != null) 
+    {
+      foreach ($comments as $comment) 
+      {
+        echo $comment->asHtml() . "<a href=\"edit?" . htmlentities($comment->getId()) . "\">Edit</a>";
+      }
+    }
+    else
+    {
+      echo "<p>No Comments yet.</p>";
+    }?>
+    </div>
 
 </main>
 <?php require('partials/footer.php'); ?>

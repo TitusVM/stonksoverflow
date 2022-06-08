@@ -246,14 +246,13 @@ class AnswerController
     {
         if(isset($_SESSION['username']))
         {
-            echo "here";
             var_dump($_POST);
             $comment = new Comment();
             $comment->setIdAnswer($_POST['idAnswer']);
             $comment->setIdQuestion($_POST['idQuestion']);
             $comment->setMainText($_POST['mainText']);
             $comment->setDatetimestamp(date("Y-m-d h:i:s"));
-            $comment->setIdUser($_POST['idUser']);
+            $comment->setIdUser($_POST['iddUser']);
 
             $tabArgs = array(
                 array('idQuestion', $comment->getIdQuestion(), PDO::PARAM_INT),
