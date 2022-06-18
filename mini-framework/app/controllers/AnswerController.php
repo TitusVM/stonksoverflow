@@ -1,14 +1,44 @@
 <?php
 session_start();
 
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
+/**
+ * AnswerController controls the answer objects behaviour
+ *
+ * PHP version 5
+ *
+ * LICENSE: This source file is subject to version 3.01 of the PHP license
+ * that is available through the world-wide-web at the following URI:
+ * http://www.php.net/license/3_01.txt.  If you did not receive a copy of
+ * the PHP License and are unable to obtain it through the web, please
+ * send a note to license@php.net so we can mail you a copy immediately.
+ *
+ * @category   Mini-Framework
+ * @package    Answer
+ * @author     Titus Abele <titus.abele@he-arc.ch>
+ * @author     Miguel Moreira <miguel.moreira@he-arc.ch>
+ */
+
+// {{{ requires
 require 'app/models/Answer.php';
 
 if (!class_exists('Comment')) {
     require 'app/models/Comment.php';
 }
+// }}}
 
+// {{{ class AnswerController
 class AnswerController
 {
+    // {{{ index
+        
+    /**
+     * index() displays the list of answers
+     *
+     * @return void
+     * @deprecated since pre-release
+     */
     public function index()
     {
         $tabArgs = array();
@@ -22,7 +52,15 @@ class AnswerController
             'anwser_added_failure' => $anwser_added_failure,
         ]);
     }
+    // }}}
 
+    // {{{ showAddView
+    /**
+     * showAddView() displays the form to add a new answer
+     *
+     * @return void
+     * @deprecated since pre-release
+     */
     public function showAddView()
     {
         /**
@@ -36,9 +74,13 @@ class AnswerController
 
         Helper::view("add_anwser");
     }
+    // }}}
 
+    // {{{ parseInput
     /**
-     * Function to add an anwser to the database
+     * parseInput() parses the input from the form and creates a new answer
+     *
+     * @return void
      */
     public function parseInput()
     {
@@ -95,7 +137,14 @@ class AnswerController
             exit;
         }
     }
+    // }}}
 
+    // {{{ userAnswers
+    /**
+     * userAnswers() displays the list of answers of a user
+     *
+     * @return void
+     */
     public function userAnswers()
     {
         $tabArgs = array(
@@ -108,7 +157,14 @@ class AnswerController
             'anwsers' => $anwsers,
         ]);
     }
+    // }}}
 
+    // {{{ edit
+    /**
+     * edit() displays the form to edit an answer
+     *
+     * @return void
+     */
     public function edit()
     {
         /**
@@ -138,9 +194,14 @@ class AnswerController
             Helper::view("login");
         }
     }
+    // }}}
 
+
+    // {{{ parseEditForm
     /**
-     * Function to parse edit form input
+     * parseEditForm() parses the input from the form and updates the answer
+     *
+     * @return void
      */
     public function parseEditForm()
     {   
@@ -192,9 +253,14 @@ class AnswerController
             exit;
         }
     }
+    // }}}
 
+    
+    // {{{ delete
     /**
-     * Delete anwser
+     * delete() deletes an answer
+     *
+     * @return void
      */
     public function delete()
     {
@@ -208,9 +274,13 @@ class AnswerController
         header("Location: index");
         exit;
     }
+    // }}}
 
+    // {{{ addCommentAnswer
     /**
-     * Add a comment to an answer
+     * addCommentAnswer() adds a comment to an answer
+     *
+     * @return void
      */
     public function addCommentAnswer()
     {
@@ -239,4 +309,6 @@ class AnswerController
             header("Location: login");
         }
     }
+    // }}}
 }
+// }}}
