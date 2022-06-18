@@ -13,6 +13,10 @@
 ?>
 
 <script>
+  setTimeout(function() {
+      $('#messageDiv').fadeOut('fast');
+  }, 1000); // <-- time in milliseconds
+
   function toggleAddCommentsAnswer(id)
   {
       let answerField = "#addCommentAnswer" + id;
@@ -42,6 +46,21 @@
       xhttp.send(); 
     }
 </script>
+    <div id="messageDiv">
+        <?php
+            if (isset($success) && isset($failure))
+            {
+              if($success != "")
+              {
+                  echo "<div class='success'>" . $success . "</div>";
+              }
+              if($failure != "")
+              {
+                  echo "<div class='failure'>" . $failure . "</div>";
+              }
+            }
+        ?>
+    </div>
     <div id="mainscreenBackground">
       <div id="questionList">
         <!--<input type="text" placeholder="Search" id="search">-->

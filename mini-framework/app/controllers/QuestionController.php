@@ -16,6 +16,9 @@ class QuestionController
     public function index()
     {
         $questions = $this->fetchAllQuestions();
+        return Helper::view("mainscreen",[
+            'questions' => $questions,
+        ]);
     }
 
     public function fetchAllQuestions()
@@ -48,13 +51,7 @@ class QuestionController
             }
             $questions = $questionsWithPosts;
         }
-        $question_added_failure = "";
-        $question_added_success = "";
-        return Helper::view("mainscreen",[
-            'questions' => $questions,
-            'question_added_success' => $question_added_success,
-            'question_added_failure' => $question_added_failure,
-        ]);
+        return $questions;
     }
 
     public function showAddView()
@@ -96,11 +93,12 @@ class QuestionController
          */
         if(!isset($_POST['title']))
         {
-            $question_added_failure = "Title is missing";
-            $question_added_success = "";
+            $failure = "Title is missing";
+            $success = "";
             return Helper::view("mainscreen",[
-                'question_added_success' => $question_added_success,
-                'question_added_failure' => $question_added_failure,
+                'success' => $success,
+                'failure' => $failure,
+                'questions' => $this->fetchAllQuestions(),
             ]);
         }
 
@@ -110,11 +108,12 @@ class QuestionController
          */
         if(!isset($_POST['mainText']) || $_POST['mainText'] == "")
         {
-            $question_added_failure = "Question cannot be empty";
-            $question_added_success = "";
+            $failure = "Question cannot be empty";
+            $success = "";
             return Helper::view("mainscreen",[
-                'question_added_success' => $question_added_success,
-                'question_added_failure' => $question_added_failure,
+                'success' => $success,
+                'failure' => $failure,
+                'questions' => $this->fetchAllQuestions(),
             ]);
         }
         /**
@@ -122,11 +121,12 @@ class QuestionController
          */
         else if(strlen($_POST['mainText']) > 255)
         {
-            $question_added_failure = "Question is too long";
-            $question_added_success = "";
+            $failure = "Question is too long";
+            $success = "";
             return Helper::view("mainscreen",[
-                'question_added_success' => $question_added_success,
-                'question_added_failure' => $question_added_failure,
+                'success' => $success,
+                'failure' => $failure,
+                'questions' => $this->fetchAllQuestions(),
             ]);
         }
         else
@@ -144,8 +144,13 @@ class QuestionController
             /**
              * Set success message and return to questions page
              */
-            $question_added_success = "Question added";
-            header("Location: index");
+            $success = "Question added";
+            $failure = "";
+            return Helper::view("mainscreen",[
+                'success' => $success,
+                'failure' => $failure,
+                'questions' => $this->fetchAllQuestions(),
+            ]);
             exit;
         }
     }
@@ -194,18 +199,26 @@ class QuestionController
          */
         if(!isset($_POST['mainText']) || $_POST['mainText'] == "" || !isset($_POST['title']) || $_POST['title'] == "")
         {
-            $question_added_failure = "Fields cannot be empty";
-            $question_added_success = "";
-            header("Location: index");
+            $failure = "Fields cannot be empty";
+            $success = "";
+            return Helper::view("mainscreen",[
+                'success' => $success,
+                'failure' => $failure,
+                'questions' => $this->fetchAllQuestions(),
+            ]);
         }
         /**
          * Check length of question is not too long
          */
         else if(strlen($_POST['mainText']) > 255)
         {
-            $question_edited_failure = "Question is too long";
-            $question_edited_success = "";
-            header("Location: editQuestion?".$_POST['id']);
+            $failure = "Question is too long";
+            $success = "";
+            return Helper::view("mainscreen",[
+                'success' => $success,
+                'failure' => $failure,
+                'questions' => $this->fetchAllQuestions(),
+            ]);
         }
         else
         {
@@ -232,8 +245,12 @@ class QuestionController
             /**
              * Set success message and return to questions page
              */
-            $question_edited_success = "Question edited";
-            header("Location: index");
+            $success = "Question edited";
+            Helper::view("mainscreen",[
+                'success' => $success,
+                'failure' => $failure,
+                'questions' => $this->fetchAllQuestions(),
+            ]);
             exit;
         }
     }

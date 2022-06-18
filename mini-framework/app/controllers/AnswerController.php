@@ -149,8 +149,8 @@ class AnswerController
          */
         if(!isset($_POST['mainText']) || $_POST['mainText'] == "")
         {
-            $answer_edited_failure = "Answer cannot be empty";
-            $answer_edited_success = "";
+            $failure = "Answer cannot be empty";
+            $success = "";
             header("Location: index");
         }
         /**
@@ -158,8 +158,8 @@ class AnswerController
          */
         else if(strlen($_POST['mainText']) > 255)
         {
-            $answer_edited_failure = "Answer is too long";
-            $answer_edited_success = "";
+            $failure = "Answer is too long";
+            $success = "";
             header("Location: index");
         }
         else
@@ -186,7 +186,8 @@ class AnswerController
             /**
              * Set success message and return to anwsers page
              */
-            $answer_edited_success = "Answer edited";
+            $failure = "";
+            $success = "Answer edited";
             header("Location: index");
             exit;
         }
