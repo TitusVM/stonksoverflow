@@ -88,15 +88,8 @@ class CommentController
              * Set success message and return to comments page
              */
             $comment_added_success = "Comment added";
-            /**
-             * TODO fix redirect
-             * Redirect to comments page with comments array
-             */
-            $this->index();
-            /*return Helper::view("show_comments",[
-                'comment_added_success' => $comment_added_success,
-                'comment_added_failure' => $comment_added_failure,
-            ]);*/
+            header("Location: index");
+            exit;
         }
     }
 
@@ -126,7 +119,7 @@ class CommentController
                 array('id', $commentId, PDO::PARAM_INT),
                 array('idUser', $idUser, PDO::PARAM_INT),
             );
-            $fetch = Model::fetch("comments", $tabArgs);
+            $fetch = Model::fetch("Comments", $tabArgs);
             $comment = new Comment();
             $comment->setId($fetch['id']);
             $comment->setMainText($fetch['mainText']);
@@ -156,11 +149,7 @@ class CommentController
         {
             $comment_edited_failure = "Comment cannot be empty";
             $comment_edited_success = "";
-            return Helper::view("show_comments",[
-                'comment_edited_success' => $comment_edited_success,
-                'comment_edited_failure' => $comment_edited_failure,
-            ]);
-            echo "Comment empty";
+            header("Location: index");
         }
         /**
          * Check length of comment is not too long
@@ -169,11 +158,7 @@ class CommentController
         {
             $comment_edited_failure = "Comment is too long";
             $comment_edited_success = "";
-            return Helper::view("show_comments",[
-                'comment_edited_success' => $comment_edited_success,
-                'comment_edited_failure' => $comment_edited_failure,
-            ]);
-            echo "Comment too long";
+            header("Location: index");
         }
         else
         {
@@ -184,8 +169,19 @@ class CommentController
             $comment->setId($_POST['id']);
             $comment->setMainText($_POST['mainText']);
             $comment->setDatetimestamp($_POST['datetimestamp']);
-            $comment->setIdQuestion($_POST['idQuestion']);
-            $comment->setIdAnswer($_POST['idAnswer']);
+
+            /**
+             * check whether comment is from question or answer
+             */
+            if($comment->getIdAnswer() == 0)
+            {
+                $comment->setIdQuestion($_POST['idQuestion']);
+            }
+            else
+            {
+                $comment->setIdAnswer($_POST['idAnswer']);
+            }
+            
             $comment->setIdUser($_POST['idUser']);
 
             $tabArgs = array(
@@ -203,15 +199,8 @@ class CommentController
              * Set success message and return to comments page
              */
             $comment_edited_success = "Comment edited";
-            /**
-             * TODO fix redirect
-             * Redirect to comments page with comments array
-             */
-            $this->index();
-            /*return Helper::view("show_comments",[
-                'comment_edited_success' => $comment_edited_success,
-                'comment_edited_failure' => $comment_edited_failure,
-            ]);*/
+            header("Location: index");
+            exit;
         }
     }
 
@@ -227,15 +216,7 @@ class CommentController
         Model::delete($tabName, $tabArgs);
         
         $comment_deleted_success = "Comment deleted";
-        /**
-         * TODO fix redirect
-         * Redirect to comments page with comments array
-         */
-        $this->index();
-        /*return Helper::view("show_comments",[
-            'comment_edited_success' => $comment_edited_success,
-            'comment_edited_failure' => $comment_edited_failure,
-        ]);*/
-        
+        header("Location: index");
+        exit;
     }
 }

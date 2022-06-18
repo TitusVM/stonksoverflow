@@ -145,23 +145,13 @@ class QuestionController
              * Set success message and return to questions page
              */
             $question_added_success = "Question added";
-            /**
-             * TODO fix redirect
-             * Redirect to questions page with questions array
-             */
-            $this->index();
-            /*return Helper::view("mainscreen",[
-                'question_added_success' => $question_added_success,
-                'question_added_failure' => $question_added_failure,
-            ]);*/
+            header("Location: index");
+            exit;
         }
     }
 
     public function edit()
     {
-        /**
-         * Redirect to edit page
-         */
         if(isset($_SESSION['username']))
         {
             $questionId = $_SERVER['QUERY_STRING'];
@@ -173,6 +163,7 @@ class QuestionController
             $fetch = Model::fetch("Questions", $tabArgs);
             $question = new Question();
             $question->setId($fetch['id']);
+            $question->setTitle($fetch['title']);
             $question->setMainText($fetch['mainText']);
             $question->setDatetimestamp($fetch['datetimestamp']);
             $question->setIdUser($fetch['idUser']);
@@ -182,7 +173,8 @@ class QuestionController
         }
         else
         {
-            Helper::view("login");
+            header("Location: login");
+            exit;
         }
     }
 
@@ -200,14 +192,11 @@ class QuestionController
         /**
          * Check if the question field has been filled out
          */
-        if(!isset($_POST['mainText']) || $_POST['mainText'] == "")
+        if(!isset($_POST['mainText']) || $_POST['mainText'] == "" || !isset($_POST['title']) || $_POST['title'] == "")
         {
-            $question_edited_failure = "Question cannot be empty";
-            $question_edited_success = "";
-            return Helper::view("mainscreen",[
-                'question_edited_success' => $question_edited_success,
-                'question_edited_failure' => $question_edited_failure,
-            ]);
+            $question_added_failure = "Fields cannot be empty";
+            $question_added_success = "";
+            header("Location: index");
         }
         /**
          * Check length of question is not too long
@@ -216,10 +205,7 @@ class QuestionController
         {
             $question_edited_failure = "Question is too long";
             $question_edited_success = "";
-            return Helper::view("mainscreen",[
-                'question_edited_success' => $question_edited_success,
-                'question_edited_failure' => $question_edited_failure,
-            ]);
+            header("Location: editQuestion?".$_POST['id']);
         }
         else
         {
@@ -228,12 +214,14 @@ class QuestionController
              */
             $question = new Question();
             $question->setId($_POST['id']);
+            $question->setTitle($_POST['title']);
             $question->setMainText($_POST['mainText']);
             $question->setDatetimestamp($_POST['datetimestamp']);
             $question->setIdUser($_POST['idUser']);
 
             $tabArgs = array(
                 array('idUser', $question->getIdUser(), PDO::PARAM_INT),
+                array('title', $question->getTitle(), PDO::PARAM_STR),
                 array('mainText', $question->getMainText(), PDO::PARAM_STR),
                 array('datetimestamp', $question->getDatetimestamp(), PDO::PARAM_STR),
                 array('id', $question->getId(), PDO::PARAM_INT),
@@ -245,15 +233,8 @@ class QuestionController
              * Set success message and return to questions page
              */
             $question_edited_success = "Question edited";
-            /**
-             * TODO fix redirect
-             * Redirect to questions page with questions array
-             */
-            $this->index();
-            /*return Helper::view("mainscreen",[
-                'question_edited_success' => $question_edited_success,
-                'question_edited_failure' => $question_edited_failure,
-            ]);*/
+            header("Location: index");
+            exit;
         }
     }
 
@@ -275,15 +256,8 @@ class QuestionController
         Model::delete($tabName, $tabArgs);
         
         $question_deleted_success = "Question deleted";
-        /**
-         * TODO fix redirect
-         * Redirect to questions page with questions array
-         */
-        $this->index();
-        /*return Helper::view("mainscreen",[
-            'question_edited_success' => $question_edited_success,
-            'question_edited_failure' => $question_edited_failure,
-        ]);*/
+        header("Location: index");
+        exit;
     }
 
     /**

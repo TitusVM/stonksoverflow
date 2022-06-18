@@ -91,15 +91,8 @@ class AnswerController
              * Set success message and return to anwsers page
              */
             $anwser_added_success = "Answer added";
-            /**
-             * TODO fix redirect
-             * Redirect to anwsers page with anwsers array
-             */
-            $this->index();
-            /*return Helper::view("show_anwsers",[
-                'anwser_added_success' => $anwser_added_success,
-                'anwser_added_failure' => $anwser_added_failure,
-            ]);*/
+            header("Location: index");
+            exit;
         }
     }
 
@@ -129,15 +122,15 @@ class AnswerController
                 array('id', $anwserId, PDO::PARAM_INT),
                 array('idUser', $idUser, PDO::PARAM_INT),
             );
-            $fetch = Model::fetch("anwsers", $tabArgs);
-            $anwser = new Answer();
-            $anwser->setId($fetch['id']);
-            $anwser->setMainText($fetch['mainText']);
-            $anwser->setDatetimestamp($fetch['datetimestamp']);
+            $fetch = Model::fetch("Answers", $tabArgs);
+            $answer = new Answer();
+            $answer->setId($fetch['id']);
+            $answer->setMainText($fetch['mainText']);
+            $answer->setDatetimestamp($fetch['datetimestamp']);
             $answer->setIdQuestion($fetch['idQuestion']);
-            $anwser->setIdUser($fetch['idUser']);
-            Helper::view("edit_anwser",[
-                'anwser' => $anwser,
+            $answer->setIdUser($fetch['idUser']);
+            Helper::view("edit_answer",[
+                'answer' => $answer,
             ]);
         }
         else
@@ -152,66 +145,50 @@ class AnswerController
     public function parseEditForm()
     {   
         /**
-         * Check if the anwser field has been filled out
+         * Check if the answer field has been filled out
          */
         if(!isset($_POST['mainText']) || $_POST['mainText'] == "")
         {
-            $anwser_edited_failure = "Answer cannot be empty";
-            $anwser_edited_success = "";
-            return Helper::view("show_anwsers",[
-                'anwser_edited_success' => $anwser_edited_success,
-                'anwser_edited_failure' => $anwser_edited_failure,
-            ]);
-            echo "Answer empty";
+            $answer_edited_failure = "Answer cannot be empty";
+            $answer_edited_success = "";
+            header("Location: index");
         }
         /**
-         * Check length of anwser is not too long
+         * Check length of answer is not too long
          */
         else if(strlen($_POST['mainText']) > 255)
         {
-            $anwser_edited_failure = "Answer is too long";
-            $anwser_edited_success = "";
-            return Helper::view("show_anwsers",[
-                'anwser_edited_success' => $anwser_edited_success,
-                'anwser_edited_failure' => $anwser_edited_failure,
-            ]);
-            echo "Answer too long";
+            $answer_edited_failure = "Answer is too long";
+            $answer_edited_success = "";
+            header("Location: index");
         }
         else
         {
             /**
              * Edit anwser in database
              */
-            $anwser = new Answer();
-            $anwser->setId($_POST['id']);
-            $anwser->setMainText($_POST['mainText']);
-            $anwser->setDatetimestamp($_POST['datetimestamp']);
+            $answer = new Answer();
+            $answer->setId($_POST['id']);
+            $answer->setMainText($_POST['mainText']);
+            $answer->setDatetimestamp($_POST['datetimestamp']);
             $answer->setIdQuestion($_POST['idQuestion']);
-            $anwser->setIdUser($_POST['idUser']);
+            $answer->setIdUser($_POST['idUser']);
 
             $tabArgs = array(
-                array('idUser', $anwser->getIdUser(), PDO::PARAM_INT),
-                array('mainText', $anwser->getMainText(), PDO::PARAM_STR),
-                array('datetimestamp', $anwser->getDatetimestamp(), PDO::PARAM_STR),
+                array('idUser', $answer->getIdUser(), PDO::PARAM_INT),
+                array('mainText', $answer->getMainText(), PDO::PARAM_STR),
+                array('datetimestamp', $answer->getDatetimestamp(), PDO::PARAM_STR),
                 array('idQuestion', $answer->getIdQuestion(), PDO::PARAM_INT),
-                array('id', $anwser->getId(), PDO::PARAM_INT)
+                array('id', $answer->getId(), PDO::PARAM_INT)
             );
-
             Model::update("Answers", $tabArgs);
 
             /**
              * Set success message and return to anwsers page
              */
-            $anwser_edited_success = "Answer edited";
-            /**
-             * TODO fix redirect
-             * Redirect to anwsers page with anwsers array
-             */
-            $this->index();
-            /*return Helper::view("show_anwsers",[
-                'anwser_edited_success' => $anwser_edited_success,
-                'anwser_edited_failure' => $anwser_edited_failure,
-            ]);*/
+            $answer_edited_success = "Answer edited";
+            header("Location: index");
+            exit;
         }
     }
 
@@ -227,16 +204,8 @@ class AnswerController
         Model::delete($tabName, $tabArgs);
         
         $anwser_deleted_success = "Answer deleted";
-        /**
-         * TODO fix redirect
-         * Redirect to anwsers page with anwsers array
-         */
-        $this->index();
-        /*return Helper::view("show_anwsers",[
-            'anwser_edited_success' => $anwser_edited_success,
-            'anwser_edited_failure' => $anwser_edited_failure,
-        ]);*/
-        
+        header("Location: index");
+        exit;
     }
 
     /**
@@ -246,27 +215,27 @@ class AnswerController
     {
         if(isset($_SESSION['username']))
         {
-            var_dump($_POST);
             $comment = new Comment();
             $comment->setIdAnswer($_POST['idAnswer']);
-            $comment->setIdQuestion($_POST['idQuestion']);
             $comment->setMainText($_POST['mainText']);
             $comment->setDatetimestamp(date("Y-m-d h:i:s"));
-            $comment->setIdUser($_POST['iddUser']);
+            $comment->setIdUser($_POST['idUser']);
 
             $tabArgs = array(
-                array('idQuestion', $comment->getIdQuestion(), PDO::PARAM_INT),
+                array('idAnswer', $comment->getIdAnswer(), PDO::PARAM_INT),
                 array('mainText', $comment->getMainText(), PDO::PARAM_STR),
                 array('datetimestamp', $comment->getDatetimestamp(), PDO::PARAM_STR),
                 array('idUser', $comment->getIdUser(), PDO::PARAM_INT),
             );
+
+            var_dump($tabArgs);
             
             Model::add("Comments", $tabArgs);
-            Helper::view("index");
+            header("Location: index");
         }   
         else
         {
-            Helper::view("login");
+            header("Location: login");
         }
     }
 }

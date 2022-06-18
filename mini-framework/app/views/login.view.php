@@ -1,6 +1,6 @@
 <?php
     $title = "Login";
-    require('partials/header.php');
+    require('partials/header_login.php');
     $username = "";
     if(isset($_POST['username']))
     {

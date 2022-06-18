@@ -21,7 +21,7 @@
     {
       foreach ($questions as $question) 
       {
-        echo $question->asHtml() . "<a href=\"edit?" . htmlentities($question->getId()) . "\">Edit</a>";
+        echo "<p>" . $question->getMainText() . "  " . "<a href=\"editQuestion?" . htmlentities($question->getId()) . "\">✏</a>". "</p>";
       }
     }
     else
@@ -38,7 +38,7 @@
     {
       foreach ($answers as $answer) 
       {
-        echo $answer->asHtml() . "<a href=\"edit?" . htmlentities($answer->getId()) . "\">Edit</a>";
+        echo "<p>" . $answer->getMainText() . "  " . "<a href=\"editAnswer?" . htmlentities($answer->getId()) . "\">✏</a>". "</p>";
       }
     }
     else
@@ -54,7 +54,7 @@
     {
       foreach ($comments as $comment) 
       {
-        echo $comment->asHtml() . "<a href=\"edit?" . htmlentities($comment->getId()) . "\">Edit</a>";
+        echo "<p>" . $comment->getMainText() . "  " . "<a href=\"editComment?" . htmlentities($comment->getId()) . "\">✏</a>". "</p>";
       }
     }
     else
