@@ -1,0 +1,11 @@
+{
+    "autoload": {
+        "psr-0": { "": "./../app/models" }
+    },
+    "require":{
+        "php":">=7.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7"
+    }
+}

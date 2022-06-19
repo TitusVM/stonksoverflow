@@ -4,7 +4,9 @@
  * The Post class is an abstract class to provide a parent to Question, Answer and Comment. Post will be called in child classes and will provide basic functions such as fetchAll, fetchId...
  */
 
-require 'core/database/Model.php';
+if(!class_exists('Model')) {
+    require 'core/database/Model.php';
+}
 
 class Post extends Model
 {
