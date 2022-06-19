@@ -41,11 +41,15 @@
             xhttp.open("GET", "question?" + id);
             xhttp.send(); 
 
-            var questionDisplay = document.getElementById("questionDisplay");
-            questionDisplay.style.display = "block";
+            var width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
 
-            var questions = document.getElementById("questions");
-            questions.style.display = "none";
+            if (width <= 640) {
+                var questionDisplay = document.getElementById("questionDisplay");
+                questionDisplay.style.display = "block";
+
+                var questions = document.getElementById("questions");
+                questions.style.display = "none";
+            }
         }
     </script>
 </html>

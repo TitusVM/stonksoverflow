@@ -125,6 +125,7 @@ div#questionDisplay {
     width: 60%;
     float: right;
     background-color: lightgrey;
+    display:block;
 }
 
 /* QUESTIONS ANSWERS AND COMMENTS IN QUESTIONDISPLAY*/
@@ -336,7 +337,7 @@ div.loginCenter>form>.loginFields {
     }
 
     #burger-menu {
-        display:block;
+        display: block;
         float: right;
         background-color: #333;
         margin-top: 10px;
