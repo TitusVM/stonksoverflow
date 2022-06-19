@@ -4,7 +4,7 @@
 ?>
 
 <div class="loginCenter">
-    <h1>New Account</h1>
+    <h1 id="newAccount">New Account</h1>
         <?php
             if( isset($_SESSION['Error']) )
             {
@@ -19,3 +19,5 @@
         <input type="submit" class="submit" value="Submit" >
     </form>
 </div>
+
+<?php require('partials/footer.php'); ?>

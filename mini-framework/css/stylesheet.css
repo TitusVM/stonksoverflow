@@ -306,3 +306,111 @@ div.loginCenter>form>.loginFields {
     height: 46px;
     transition: 100ms linear;
 }
+
+#login-logout-button {
+    display: inline-block;
+}
+
+/* NAV BAR */
+.desktop-nav-bar {
+    display: inline-block;
+}
+
+#mobile-nav-bar {
+    display: none;
+}
+
+#burger-menu {
+    display:none;
+}
+
+
+
+@media screen and (max-width: 640px) {
+    #login-logout-button {
+        display: none;
+    }
+
+    .desktop-nav-bar {
+        display: none;
+    }
+
+    #burger-menu {
+        display:block;
+        float: right;
+        background-color: #333;
+        margin-top: 10px;
+        margin-right: 15px;
+    }
+
+    #burger-menu > div {
+        width: 35px;
+        height: 5px;
+        background-color: white;
+        margin: 6px 0;
+    }
+
+    .mobile-nav-bar-links {
+        color: white;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+        display: block;
+        background-color: #5A5959;
+    }
+
+    .new-question{  
+        display: block;
+        width: 80%;
+        padding-left: 10%;
+        background-color: lightgrey;
+        z-index: -1;
+    }
+
+    .new-question > h1 {
+        padding-left: 20%;
+    }
+
+    .new-question > #submit-btn {
+        width: 84%;
+    }
+
+    .mobile-nav-bar-links:first-of-type {
+        margin-top: 60px;
+    }
+
+    div.loginCenter {
+        margin: auto;
+        display: block;
+        width: 80%;
+        padding-left: 15%;
+        background-color: lightgrey;
+        z-index: -1;
+    }
+
+    div.loginCenter > h1 {
+        padding-left: 30%;
+    }
+
+    div.loginCenter > #newAccount {
+        padding-left: 20%;
+    }
+
+    div.loginCenter > form > input[type=submit] {
+        width: 78%;
+        height: 40px;
+    }
+
+    div#questionDisplay {
+        width: 100%;
+        float: none;
+        height: 100%;
+        display: none;
+    }
+
+    div#questions {
+        width: 100%;
+        float: none;
+        height: 100%;
+    }
+}
